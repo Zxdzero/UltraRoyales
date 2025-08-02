@@ -1,0 +1,6 @@
+name: UltraRoyales
+version: '1.0'
+main: dev.zxdzero.UltraRoyales
+api-version: '1.21'
+authors: [ Puzzle_Dude98 ]
+depend: [ZxdzeroEvents]
