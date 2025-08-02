@@ -21,7 +21,7 @@ public final class UltraRoyales extends JavaPlugin {
 
         if (Bukkit.getPluginManager().getPlugin("codec") != null) {
             getLogger().info("LOD");
-            getLogger().info(String.valueOf(CodecItemsApi.getItem(NamespacedKey.fromString("minecraft:item/spider_staff")).isPresent()));
+            getLogger().info(String.valueOf(CodecItemsApi.getItem(NamespacedKey.fromString("withergames:item/spider_staff")).isPresent()));
         }
     }
 
