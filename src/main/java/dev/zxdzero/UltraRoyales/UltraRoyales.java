@@ -1,5 +1,9 @@
 package dev.zxdzero.UltraRoyales;
 
+import com.fractial.codec.api.CodecItemsApi;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class UltraRoyales extends JavaPlugin {
@@ -13,6 +17,12 @@ public final class UltraRoyales extends JavaPlugin {
         plugin = this;
 
         ItemsMenuManager.registerMenus();
+        Items.registerBehavior();
+
+        if (Bukkit.getPluginManager().getPlugin("codec") != null) {
+            getLogger().info("LOD");
+            getLogger().info(String.valueOf(CodecItemsApi.getItem(NamespacedKey.fromString("minecraft:item/spider_staff")).isPresent()));
+        }
     }
 
     @Override

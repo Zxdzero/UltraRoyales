@@ -25,7 +25,7 @@ public class ItemsMenuManager implements Listener {
     }
     private static Inventory createMenu() {
         Inventory inv = Bukkit.createInventory(null, 9, Component.text("Ultra Royales Items"));
-        inv.setItem(0, new ItemStack(Material.STICK));
+        inv.setItem(0, Items.knightsSaddle());
         return inv;
     }
 }

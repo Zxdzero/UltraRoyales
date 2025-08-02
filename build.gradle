@@ -3,8 +3,8 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
-group = 'dev.zxdzero'
-version = '1.0.1'
+group = 'dev.zxdzero.UltraRoyales'
+version = '1.1'
 
 repositories {
     mavenCentral()
@@ -16,7 +16,8 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT")
-    implementation "dev.zxdzero:Zxdzero Events"
+    compileOnly "dev.zxdzero:Zxdzero Events"
+    compileOnly files('libs/codec-1.0.0-SNAPSHOT.jar')
 }
 
 tasks {
