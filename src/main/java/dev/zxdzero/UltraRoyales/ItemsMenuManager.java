@@ -1,17 +1,13 @@
-package dev.zxdzero;
+package dev.zxdzero.UltraRoyales;
 
-import dev.zxdzero.registries.ItemMenuRegistry;
+import dev.zxdzero.ZxdzeroEvents.registries.ItemMenuRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemsMenuManager implements Listener {
 

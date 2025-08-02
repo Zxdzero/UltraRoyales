@@ -1,4 +1,4 @@
-package dev.zxdzero;
+package dev.zxdzero.UltraRoyales;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
