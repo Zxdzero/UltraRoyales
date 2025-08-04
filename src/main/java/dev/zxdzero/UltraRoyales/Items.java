@@ -6,9 +6,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -16,25 +20,46 @@ import java.util.List;
 
 public class Items {
 
+    public static final NamespacedKey knightsHorse = NamespacedKey.fromString("knightshorse", UltraRoyales.getPlugin());
+
     public static void registerBehavior() {
 
         // Knight's Saddle
         ItemActionRegistry.register(CodecItemsApi.getItem(NamespacedKey.fromString("withergames:item/knights_saddle")).orElse(null), (player, item) -> {
+            Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+            Objective objective = scoreboard.getObjective("knightshorse");
+            int cooldown = 0;
+            if (objective != null) {
+                cooldown = objective.getScore(player.getName()).getScore();
+            }
+
+            if (cooldown != 0) {
+                player.sendMessage(Component.text("You must wait another " + cooldown/20 + " seconds to use this saddle!", NamedTextColor.RED));
+                return;
+            }
+
+            if (player.getVehicle() != null) {
+                player.sendMessage(Component.text("Dismount to use this saddle!", NamedTextColor.RED));
+                return;
+            }
+            Horse horse = (Horse) player.getWorld().spawnEntity(player.getLocation(), EntityType.HORSE);
+            horse.setTamed(true);
+            horse.setOwner(player);
+            horse.setAdult();
+            horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
+            horse.setInvulnerable(true);
+            horse.setColor(Horse.Color.GRAY);
+            horse.getPersistentDataContainer().set(knightsHorse, PersistentDataType.BOOLEAN, true);
+            horse.addPassenger(player);
+
             player.getWorld().spawnParticle(
-                    Particle.FLAME,
-                    player.getLocation().add(0, 1, 0), // slightly above ground
-                    100, // count
-                    0.5, 1, 0.5, // x, y, z offset
-                    0.05 // speed
-            );
-            player.getWorld().spawnParticle(
-                    Particle.LARGE_SMOKE,
+                    Particle.HEART,
                     player.getLocation().add(0, 1, 0),
-                    40,
-                    0.3, 0.8, 0.3,
-                    0.01
+                    100,
+                    0.5, 1, 0.5,
+                    0.05
             );
-            player.getWorld().playSound(player.getLocation(), Sound.ITEM_FIRECHARGE_USE, 1.0f, 1.0f);
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_HORSE_SADDLE, 1.0f, 1.0f);
         });
 
         // null
@@ -57,17 +82,17 @@ public class Items {
         });
     }
 
-//    public static ItemStack knightsSaddle() {
-//        ItemStack amulet = new ItemStack(Material.SADDLE);
-//        ItemMeta meta = amulet.getItemMeta();
-//        meta.displayName(Component.text("Knight's Saddle").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
-//
-//        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
-//        customModelData.setStrings(List.of("ultraroyales:knightssaddle"));
-//        meta.setCustomModelDataComponent(customModelData);
-//
-//        amulet.setItemMeta(meta);
-//
-//        return amulet;
-//    }
+    public static ItemStack knightsSaddle() {
+        ItemStack saddle = new ItemStack(Material.SADDLE);
+        ItemMeta meta = saddle.getItemMeta();
+        meta.displayName(Component.text("Knight's Saddle").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:knightssaddle"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        saddle.setItemMeta(meta);
+
+        return saddle;
+    }
 }

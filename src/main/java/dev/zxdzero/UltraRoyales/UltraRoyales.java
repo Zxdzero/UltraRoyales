@@ -1,9 +1,9 @@
 package dev.zxdzero.UltraRoyales;
 
 import com.fractial.codec.api.CodecItemsApi;
+import dev.zxdzero.UltraRoyales.listeners.KnightsSaddleListener;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class UltraRoyales extends JavaPlugin {
@@ -18,6 +18,8 @@ public final class UltraRoyales extends JavaPlugin {
 
         ItemsMenuManager.registerMenus();
         Items.registerBehavior();
+
+        getServer().getPluginManager().registerEvents(new KnightsSaddleListener(), this);
 
         if (Bukkit.getPluginManager().getPlugin("codec") != null) {
             getLogger().info("LOD");
