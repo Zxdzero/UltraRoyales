@@ -107,4 +107,18 @@ public class Items {
 
         return bow;
     }
+
+    public static ItemStack ghlochester() {
+        ItemStack rod = new ItemStack(Material.FISHING_ROD);
+        ItemMeta meta = rod.getItemMeta();
+        meta.displayName(Component.text("Ghlochester").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:ghlochester"));
+        meta.setCustomModelDataComponent(customModelData);
+        meta.setUnbreakable(true);
+
+        rod.setItemMeta(meta);
+
+        return rod;
+    }
 }

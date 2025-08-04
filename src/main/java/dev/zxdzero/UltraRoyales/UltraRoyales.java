@@ -2,6 +2,7 @@ package dev.zxdzero.UltraRoyales;
 
 import com.fractial.codec.api.CodecItemsApi;
 import dev.zxdzero.UltraRoyales.listeners.DwarvenBowListener;
+import dev.zxdzero.UltraRoyales.listeners.GhlochesterListener;
 import dev.zxdzero.UltraRoyales.listeners.KnightsSaddleListener;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -22,6 +23,7 @@ public final class UltraRoyales extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new KnightsSaddleListener(), this);
         getServer().getPluginManager().registerEvents(new DwarvenBowListener(), this);
+        getServer().getPluginManager().registerEvents(new GhlochesterListener(), this);
 
         if (Bukkit.getPluginManager().getPlugin("codec") != null) {
             getLogger().info("LOD");
