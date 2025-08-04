@@ -86,7 +86,6 @@ public class Items {
         ItemStack saddle = new ItemStack(Material.SADDLE);
         ItemMeta meta = saddle.getItemMeta();
         meta.displayName(Component.text("Knight's Saddle").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
-w
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:knightssaddle"));
         meta.setCustomModelDataComponent(customModelData);
@@ -94,5 +93,18 @@ w
         saddle.setItemMeta(meta);
 
         return saddle;
+    }
+
+    public static ItemStack dwarvenBow() {
+        ItemStack bow = new ItemStack(Material.BOW);
+        ItemMeta meta = bow.getItemMeta();
+        meta.displayName(Component.text("Dwarven Bow").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:dwarvenbow"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        bow.setItemMeta(meta);
+
+        return bow;
     }
 }

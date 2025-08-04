@@ -28,7 +28,7 @@ public class ItemsMenuManager implements Listener {
     private static Inventory createMenu() {
         Inventory inv = Bukkit.createInventory(null, 9, Component.text("Ultra Royales Items"));
         inv.setItem(0, Items.knightsSaddle());
-        setItemIfExists(inv, 1, "withergames:item/spider_staff");
+        inv.setItem(1, Items.dwarvenBow());
         setItemIfExists(inv, 2, "null");
         return inv;
     }
