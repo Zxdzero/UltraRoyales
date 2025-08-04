@@ -25,7 +25,7 @@ public class Items {
     public static void registerBehavior() {
 
         // Knight's Saddle
-        ItemActionRegistry.register(CodecItemsApi.getItem(NamespacedKey.fromString("withergames:item/knights_saddle")).orElse(null), (player, item) -> {
+        ItemActionRegistry.register(knightsSaddle(), (player, item) -> {
             Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
             Objective objective = scoreboard.getObjective("knightshorse");
             int cooldown = 0;
@@ -86,7 +86,7 @@ public class Items {
         ItemStack saddle = new ItemStack(Material.SADDLE);
         ItemMeta meta = saddle.getItemMeta();
         meta.displayName(Component.text("Knight's Saddle").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
-
+w
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:knightssaddle"));
         meta.setCustomModelDataComponent(customModelData);

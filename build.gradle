@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.zxdzero.UltraRoyales'
-version = '1.2'
+version = '1.2.2'
 
 repositories {
     mavenCentral()
