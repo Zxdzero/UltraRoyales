@@ -5,8 +5,6 @@ import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -28,17 +26,9 @@ public class GhlochesterListener implements Listener {
                     // Pull target towards shooter
                     Vector pull = player.getLocation().toVector().subtract(target.getLocation().toVector()).normalize().multiply(1.5);
                     target.setVelocity(pull);
-
-                    // Diamond axe crit damage
-                    double diamondAxeDamage = 9.0; // base diamond axe damage
-                    double critMultiplier = 1.5; // crit multiplier
-                    double finalDamage = diamondAxeDamage * critMultiplier;
-
-//                    target.damage(finalDamage, player); // attribute damage to shooter
                 }
             }
             case IN_GROUND, FAILED_ATTEMPT -> {
-                // Grapple yourself towards the hook
                 if (event.getHook() != null) {
                     Vector pull = event.getHook().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.5);
                     pull.setY(0.5);
