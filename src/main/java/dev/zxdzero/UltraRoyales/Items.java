@@ -6,8 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
@@ -61,23 +60,11 @@ public class Items {
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_HORSE_SADDLE, 1.0f, 1.0f);
         });
 
-        // null
-        ItemActionRegistry.register(CodecItemsApi.getItem(NamespacedKey.fromString("item")).orElse(null), (player, item) -> {
-            player.getWorld().spawnParticle(
-                    Particle.FLAME,
-                    player.getLocation().add(0, 1, 0), // slightly above ground
-                    100, // count
-                    0.5, 1, 0.5, // x, y, z offset
-                    0.05 // speed
-            );
-            player.getWorld().spawnParticle(
-                    Particle.LARGE_SMOKE,
-                    player.getLocation().add(0, 1, 0),
-                    40,
-                    0.3, 0.8, 0.3,
-                    0.01
-            );
-            player.getWorld().playSound(player.getLocation(), Sound.ITEM_FIRECHARGE_USE, 1.0f, 1.0f);
+        // Spider Staff
+        ItemActionRegistry.register(spiderStaff(), (player, item) -> {
+
+            SpiderAIController.spawnPlayerSpiders(player);
+
         });
     }
 
@@ -119,5 +106,19 @@ public class Items {
         rod.setItemMeta(meta);
 
         return rod;
+    }
+
+    public static ItemStack spiderStaff() {
+        ItemStack staff = new ItemStack(Material.NAUTILUS_SHELL);
+        ItemMeta meta = staff.getItemMeta();
+        meta.displayName(Component.text("Spider Staff").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:spiderstaff"));
+        meta.setCustomModelDataComponent(customModelData);
+        meta.setUnbreakable(true);
+
+        staff.setItemMeta(meta);
+
+        return staff;
     }
 }
