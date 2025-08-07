@@ -1,10 +1,7 @@
 package dev.zxdzero.UltraRoyales;
 
 import com.fractial.codec.api.CodecItemsApi;
-import dev.zxdzero.UltraRoyales.listeners.DwarvenBowListener;
-import dev.zxdzero.UltraRoyales.listeners.GhlochesterListener;
-import dev.zxdzero.UltraRoyales.listeners.KnightsSaddleListener;
-import dev.zxdzero.UltraRoyales.listeners.SpiderStaffListener;
+import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,11 +15,13 @@ public final class UltraRoyales extends JavaPlugin {
     public static UltraRoyales getPlugin() { return plugin; }
 
     public static NamespacedKey staffCooldown;
+    public static NamespacedKey saberCooldown;
 
     @Override
     public void onEnable() {
         plugin = this;
         staffCooldown = new NamespacedKey(plugin, "spider_staff_cooldown");
+        staffCooldown = new NamespacedKey(plugin, "sponge_saber_cooldown");
 
         ItemsMenuManager.registerMenus();
         Items.registerBehavior();
@@ -31,6 +30,7 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DwarvenBowListener(), this);
         getServer().getPluginManager().registerEvents(new GhlochesterListener(), this);
         getServer().getPluginManager().registerEvents(new SpiderStaffListener(), this);
+        getServer().getPluginManager().registerEvents(new FractialDwarvenBowListener(), this);
 
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
 

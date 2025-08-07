@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -68,6 +69,34 @@ public class Items {
                 CooldownRegistry.setCooldown(player, UltraRoyales.staffCooldown, 180);
             }
         });
+
+        // Sponge Saber
+        ItemActionRegistry.register(spongeSaber(), (player, item) -> {
+            if (CooldownRegistry.getCooldown(player, UltraRoyales.saberCooldown) == 0) {
+
+                Location center = player.getLocation();
+                int radius = 20;
+
+                int removed = 0;
+
+                for (int x = -radius; x <= radius; x++) {
+                    for (int y = -radius; y <= radius; y++) {
+                        for (int z = -radius; z <= radius; z++) {
+                            Location loc = center.clone().add(x, y, z);
+                            if (center.distance(loc) > radius) continue;
+
+                            Block block = loc.getBlock();
+                            if (block.getType() == Material.WATER || block.getType() == Material.BUBBLE_COLUMN) {
+                                block.setType(Material.AIR);
+                                removed++;
+                            }
+                        }
+                    }
+                }
+
+                CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 180);
+            }
+        });
     }
 
     public static ItemStack knightsSaddle() {
@@ -89,6 +118,19 @@ public class Items {
         meta.displayName(Component.text("Dwarven Bow").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:dwarvenbow"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        bow.setItemMeta(meta);
+
+        return bow;
+    }
+
+    public static ItemStack fractialDwarvenBow() {
+        ItemStack bow = new ItemStack(Material.BOW);
+        ItemMeta meta = bow.getItemMeta();
+        meta.displayName(Component.text("Fractial's Dwarven Bow").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:fractial_dwarvenbow"));
         meta.setCustomModelDataComponent(customModelData);
 
         bow.setItemMeta(meta);
@@ -118,6 +160,19 @@ public class Items {
         customModelData.setStrings(List.of("ultraroyales:spiderstaff"));
         meta.setCustomModelDataComponent(customModelData);
         meta.setUnbreakable(true);
+
+        staff.setItemMeta(meta);
+
+        return staff;
+    }
+
+    public static ItemStack spongeSaber() {
+        ItemStack staff = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = staff.getItemMeta();
+        meta.displayName(Component.text("Spider Staff").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:sponge_saber"));
+        meta.setCustomModelDataComponent(customModelData);
 
         staff.setItemMeta(meta);
 

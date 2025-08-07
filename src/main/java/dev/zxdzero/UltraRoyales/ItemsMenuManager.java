@@ -31,6 +31,7 @@ public class ItemsMenuManager implements Listener {
         inv.setItem(1, Items.dwarvenBow());
         inv.setItem(2, Items.ghlochester());
         inv.setItem(3, Items.spiderStaff());
+        inv.setItem(4, Items.fractialDwarvenBow());
         setItemIfExists(inv, 2, "null");
         return inv;
     }
