@@ -1,6 +1,7 @@
 package dev.zxdzero.UltraRoyales;
 
 import com.fractial.codec.api.CodecItemsApi;
+import dev.zxdzero.ZxdzeroEvents.ItemHelper;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
@@ -11,6 +12,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -202,4 +204,18 @@ public class Items {
         return staff;
     }
 
+ static ItemStack electricConch() {
+        ItemStack conch = new ItemStack(Material.TRIDENT);
+        conch.addUnsafeEnchantment(Enchantment.RIPTIDE, 4);
+        ItemMeta meta = conch.getItemMeta();
+        meta = ItemHelper.weaponBuilder(meta, 0, 4);
+        meta.displayName(Component.text("Electric Conch").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:electricconch"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        conch.setItemMeta(meta);
+
+        return conch;
+    }
 }
