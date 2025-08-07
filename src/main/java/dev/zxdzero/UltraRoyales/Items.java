@@ -164,29 +164,42 @@ public class Items {
     }
 
     public static ItemStack spiderStaff() {
-        ItemStack staff = new ItemStack(Material.NAUTILUS_SHELL);
-        ItemMeta meta = staff.getItemMeta();
+        ItemStack saber = new ItemStack(Material.NAUTILUS_SHELL);
+        ItemMeta meta = saber.getItemMeta();
         meta.displayName(Component.text("Spider Staff", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:spiderstaff"));
         meta.setCustomModelDataComponent(customModelData);
         meta.setUnbreakable(true);
 
-        staff.setItemMeta(meta);
+        saber.setItemMeta(meta);
 
-        return staff;
+        return saber;
     }
 
     public static ItemStack spongeSaber() {
-        ItemStack staff = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = staff.getItemMeta();
+        ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = saber.getItemMeta();
         meta.displayName(Component.text("Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:sponge_saber"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        saber.setItemMeta(meta);
+
+        return saber;
+    }
+    public static ItemStack skeletalBarber() {
+        ItemStack staff = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = staff.getItemMeta();
+        meta.displayName(Component.text("Skeletal Barber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:skeletalbarber"));
         meta.setCustomModelDataComponent(customModelData);
 
         staff.setItemMeta(meta);
 
         return staff;
     }
+
 }

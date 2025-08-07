@@ -190,7 +190,7 @@ public class SpiderAIController {
             }
         };
 
-        controlTask.runTaskTimer(plugin, 0L, 10L);
+        controlTask.runTaskTimer(plugin, 0L, 2L);
         spiderTasks.put(spiderUUID, controlTask);
     }
 

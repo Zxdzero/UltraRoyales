@@ -31,6 +31,7 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GhlochesterListener(), this);
         getServer().getPluginManager().registerEvents(new SpiderStaffListener(), this);
         getServer().getPluginManager().registerEvents(new FractialDwarvenBowListener(), this);
+        getServer().getPluginManager().registerEvents(new SkeletalBarberListener(), this);
 
         getCommand("arrowaura").setExecutor(new ArrowAuraCommand());
 

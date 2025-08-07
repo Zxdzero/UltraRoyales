@@ -33,6 +33,7 @@ public class ItemsMenuManager implements Listener {
         inv.setItem(3, Items.spiderStaff());
         inv.setItem(4, Items.fractialDwarvenBow());
         inv.setItem(5, Items.spongeSaber());
+        inv.setItem(6, Items.skeletalBarber());
         setItemIfExists(inv, 2, "null");
         return inv;
     }
