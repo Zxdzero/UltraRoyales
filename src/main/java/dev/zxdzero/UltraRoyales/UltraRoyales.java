@@ -32,6 +32,8 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SpiderStaffListener(), this);
         getServer().getPluginManager().registerEvents(new FractialDwarvenBowListener(), this);
 
+        getCommand("arrowaura").setExecutor(new ArrowAuraCommand());
+
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
 
         if (Bukkit.getPluginManager().getPlugin("codec") != null) {
