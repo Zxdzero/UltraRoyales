@@ -21,7 +21,7 @@ public final class UltraRoyales extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         staffCooldown = new NamespacedKey(plugin, "spider_staff_cooldown");
-        staffCooldown = new NamespacedKey(plugin, "sponge_saber_cooldown");
+        saberCooldown = new NamespacedKey(plugin, "sponge_saber_cooldown");
 
         ItemsMenuManager.registerMenus();
         Items.registerBehavior();
@@ -33,6 +33,7 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FractialDwarvenBowListener(), this);
 
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
+        CooldownRegistry.registerCooldown(saberCooldown, Material.DIAMOND_SWORD);
 
         if (Bukkit.getPluginManager().getPlugin("codec") != null) {
             getLogger().info("LOD");

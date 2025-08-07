@@ -3,10 +3,13 @@ package dev.zxdzero.UltraRoyales;
 import com.fractial.codec.api.CodecItemsApi;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
+import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +20,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Items {
 
@@ -73,11 +77,8 @@ public class Items {
         // Sponge Saber
         ItemActionRegistry.register(spongeSaber(), (player, item) -> {
             if (CooldownRegistry.getCooldown(player, UltraRoyales.saberCooldown) == 0) {
-
-                System.out.println("Sponge Saber Use");
-
                 Location center = player.getLocation();
-                int radius = 20;
+                int radius = 5;
 
                 int removed = 0;
 
@@ -95,8 +96,16 @@ public class Items {
                         }
                     }
                 }
+                System.out.println("Sponge Saber Used to remove: " + removed + " Blocks");
 
-                CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 180);
+                if (removed > 10) {
+                    ItemMeta meta = item.getItemMeta();
+                    meta.displayName(Component.text("Wet Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+                    meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(NamespacedKey.fromString("ultraroyales:sponge_power"), 1D, AttributeModifier.Operation.ADD_NUMBER));
+                    item.setItemMeta(meta);
+                }
+
+                CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 45);
             }
         });
     }
