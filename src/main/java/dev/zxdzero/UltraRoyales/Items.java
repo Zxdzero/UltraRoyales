@@ -166,7 +166,7 @@ public class Items {
     public static ItemStack spiderStaff() {
         ItemStack staff = new ItemStack(Material.NAUTILUS_SHELL);
         ItemMeta meta = staff.getItemMeta();
-        meta.displayName(Component.text("Spider Staff").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(Component.text("Spider Staff", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:spiderstaff"));
         meta.setCustomModelDataComponent(customModelData);
