@@ -7,6 +7,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -18,6 +20,11 @@ public class DwarvenBowListener implements Listener {
     public void onBowFire(EntityShootBowEvent e) {
         if (e.getBow().getItemMeta().hasCustomModelDataComponent() && e.getProjectile() instanceof Arrow arrow) {
             if (e.getBow().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:dwarvenbow")) {
+                arrow.addCustomEffect(new PotionEffect(
+                        PotionEffectType.MINING_FATIGUE,
+                        600,  // 30 seconds duration
+                        0     // Mining Fatigue I (amplifier 0 = level I)
+                ), true);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
