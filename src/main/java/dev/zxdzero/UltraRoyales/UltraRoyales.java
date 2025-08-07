@@ -5,7 +5,9 @@ import dev.zxdzero.UltraRoyales.listeners.DwarvenBowListener;
 import dev.zxdzero.UltraRoyales.listeners.GhlochesterListener;
 import dev.zxdzero.UltraRoyales.listeners.KnightsSaddleListener;
 import dev.zxdzero.UltraRoyales.listeners.SpiderStaffListener;
+import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,9 +17,12 @@ public final class UltraRoyales extends JavaPlugin {
 
     public static UltraRoyales getPlugin() { return plugin; }
 
+    public static NamespacedKey staffCooldown;
+
     @Override
     public void onEnable() {
         plugin = this;
+        staffCooldown = new NamespacedKey(plugin, "spider_staff_cooldown");
 
         ItemsMenuManager.registerMenus();
         Items.registerBehavior();
@@ -26,6 +31,8 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DwarvenBowListener(), this);
         getServer().getPluginManager().registerEvents(new GhlochesterListener(), this);
         getServer().getPluginManager().registerEvents(new SpiderStaffListener(), this);
+
+        CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
 
         if (Bukkit.getPluginManager().getPlugin("codec") != null) {
             getLogger().info("LOD");

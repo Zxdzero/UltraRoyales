@@ -1,6 +1,7 @@
 package dev.zxdzero.UltraRoyales;
 
 import com.fractial.codec.api.CodecItemsApi;
+import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -62,9 +63,10 @@ public class Items {
 
         // Spider Staff
         ItemActionRegistry.register(spiderStaff(), (player, item) -> {
-
-            SpiderAIController.spawnPlayerSpiders(player);
-
+            if (CooldownRegistry.getCooldown(player, UltraRoyales.staffCooldown) == 0) {
+                SpiderAIController.spawnPlayerSpiders(player);
+                CooldownRegistry.setCooldown(player, UltraRoyales.staffCooldown, 180);
+            }
         });
     }
 
