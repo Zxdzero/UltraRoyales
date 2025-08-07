@@ -74,6 +74,8 @@ public class Items {
         ItemActionRegistry.register(spongeSaber(), (player, item) -> {
             if (CooldownRegistry.getCooldown(player, UltraRoyales.saberCooldown) == 0) {
 
+                System.out.println("Sponge Saber Use");
+
                 Location center = player.getLocation();
                 int radius = 20;
 
@@ -169,7 +171,7 @@ public class Items {
     public static ItemStack spongeSaber() {
         ItemStack staff = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = staff.getItemMeta();
-        meta.displayName(Component.text("Spider Staff").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(Component.text("Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:sponge_saber"));
         meta.setCustomModelDataComponent(customModelData);
