@@ -1,6 +1,5 @@
 package dev.zxdzero.UltraRoyales;
 
-import com.fractial.codec.api.CodecItemsApi;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemMenuRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,7 +15,6 @@ public class ItemsMenuManager implements Listener {
     private static final UltraRoyales plugin = UltraRoyales.getPlugin();
 
     public static void registerMenus() {
-        // Register the main WitherGames items menu (the original menu functionality)
         ItemMenuRegistry.registerItemMenu(
                 plugin,
                 "ultraroyales_items",
@@ -35,15 +33,6 @@ public class ItemsMenuManager implements Listener {
         inv.setItem(5, Items.spongeSaber());
         inv.setItem(6, Items.skeletalBarber());
         inv.setItem(7, Items.electricConch());
-        setItemIfExists(inv, 2, "null");
         return inv;
-    }
-
-    private static void setItemIfExists(Inventory inv, int slot, String item) {
-        if (CodecItemsApi.getItem(NamespacedKey.fromString(item)).isPresent()) {
-            inv.setItem(slot, CodecItemsApi.getItem(NamespacedKey.fromString(item)).get());
-        } else {
-            UltraRoyales.getPlugin().getLogger().warning("Item not found: " + item);
-        }
     }
 }

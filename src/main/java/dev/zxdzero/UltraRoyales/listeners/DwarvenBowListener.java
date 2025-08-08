@@ -23,7 +23,7 @@ public class DwarvenBowListener implements Listener {
                 arrow.addCustomEffect(new PotionEffect(
                         PotionEffectType.MINING_FATIGUE,
                         600,  // 30 seconds duration
-                        0     // Mining Fatigue I (amplifier 0 = level I)
+                        0     // Mining Fatigue I
                 ), true);
                 new BukkitRunnable() {
                     @Override
@@ -51,9 +51,9 @@ public class DwarvenBowListener implements Listener {
         double closestDist = Double.MAX_VALUE;
 
         // Parameters for trajectory simulation
-        int ticksToSimulate = 20;  // how far ahead to simulate
-        double gravity = 0.05;     // approximate arrow gravity per tick (may need tweaking)
-        double drag = 0.99;        // approximate drag factor per tick
+        int ticksToSimulate = 20;
+        double gravity = 0.05;
+        double drag = 0.99;
 
         Vector pos = arrow.getLocation().toVector();
         Vector velocity = arrow.getVelocity();
@@ -101,14 +101,14 @@ public class DwarvenBowListener implements Listener {
         Vector currentVel = arrow.getVelocity();
         double currentSpeed = currentVel.length();
 
-        // Define a reference speed at which turnSpeed is max (tweak as needed)
+        // Define a reference speed at which turnSpeed is max
         double maxSpeed = 1.5;
 
         // Scale turn speed from 0 (at speed=0) to baseTurnSpeed (at or above maxSpeed)
         double speedFactor = Math.min(currentSpeed / maxSpeed, 1.0);
         double turnSpeed = baseTurnSpeed * speedFactor;
 
-        if (turnSpeed <= 0) return; // no turning if speed is 0
+        if (turnSpeed <= 0) return;
 
         Vector desiredDir = targetLoc.clone()
                 .add(0, 0.5, 0) // aim a bit above target center

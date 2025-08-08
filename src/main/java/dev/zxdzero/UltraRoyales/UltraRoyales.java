@@ -1,6 +1,5 @@
 package dev.zxdzero.UltraRoyales;
 
-import com.fractial.codec.api.CodecItemsApi;
 import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import org.bukkit.Bukkit;
@@ -41,11 +40,6 @@ public final class UltraRoyales extends JavaPlugin {
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
         CooldownRegistry.registerCooldown(saberCooldown, Material.DIAMOND_SWORD);
         CooldownRegistry.registerCooldown(conchCooldown, Material.TRIDENT);
-
-        if (Bukkit.getPluginManager().getPlugin("codec") != null) {
-            getLogger().info("LOD");
-            getLogger().info(String.valueOf(CodecItemsApi.getItem(NamespacedKey.fromString("withergames:item/spider_staff")).isPresent()));
-        }
     }
 
     @Override

@@ -22,14 +22,14 @@ public class ElectricConchListener implements Listener {
 
     private final UltraRoyales plugin = UltraRoyales.getPlugin();
     private final double WAVE_RADIUS = 10.0; // Maximum wave radius
-    private final int STUN_DURATION = 60; // 3 seconds (20 ticks = 1 second)
+    private final int STUN_DURATION = 60; // 3 seconds
     private final double KNOCKBACK_STRENGTH = 1.5;
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getAction().toString().contains("LEFT_CLICK") && player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) {
+        if (event.getAction().toString().contains("LEFT_CLICK") && player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) {
             if (!player.getInventory().getItemInMainHand().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:electricconch")) return;
 
             int cooldown = CooldownRegistry.getCooldown(player, UltraRoyales.conchCooldown);
@@ -53,7 +53,6 @@ public class ElectricConchListener implements Listener {
 
                     createTidalWaveEffect(center, radius);
 
-                    // Check and stun players
                     for (Entity target : center.getWorld().getLivingEntities()) {
                         if (target.equals(player)) continue;
 
@@ -71,7 +70,6 @@ public class ElectricConchListener implements Listener {
                             direction.multiply(KNOCKBACK_STRENGTH);
                             target.setVelocity(direction);
 
-                            // Effects
                             target.getWorld().spawnParticle(Particle.SPLASH, target.getLocation().add(0, 1, 0), 15, 0.3, 0.3, 0.3, 0.2);
                         }
                     }
@@ -80,7 +78,7 @@ public class ElectricConchListener implements Listener {
                 }
             }.runTaskTimer(plugin, 0L, 1L);
 
-            CooldownRegistry.setCooldown(player, UltraRoyales.conchCooldown, 30);
+            CooldownRegistry.setCooldown(player, UltraRoyales.conchCooldown, 60);
         }
     }
 

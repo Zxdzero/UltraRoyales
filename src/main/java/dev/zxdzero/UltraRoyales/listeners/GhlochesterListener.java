@@ -2,6 +2,7 @@ package dev.zxdzero.UltraRoyales.listeners;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,23 +17,25 @@ public class GhlochesterListener implements Listener {
     public void onFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
 
-//        if (!isSpecialRod(player.getInventory().getItemInMainHand())) return;
+        if (player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()
+                && player.getInventory().getItemInMainHand().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:ghlochester")) {
 
-        switch (event.getState()) {
-            case CAUGHT_ENTITY -> {
-                Entity caught = event.getCaught();
-                if (caught instanceof Player target) {
+            switch (event.getState()) {
+                case CAUGHT_ENTITY -> {
+                    Entity caught = event.getCaught();
+                    if (caught instanceof LivingEntity target) {
 
-                    // Pull target towards shooter
-                    Vector pull = player.getLocation().toVector().subtract(target.getLocation().toVector()).normalize().multiply(1.5);
-                    target.setVelocity(pull);
+                        // Pull target towards shooter
+                        Vector pull = player.getLocation().toVector().subtract(target.getLocation().toVector()).normalize().multiply(1.5);
+                        target.setVelocity(pull);
+                    }
                 }
-            }
-            case IN_GROUND, FAILED_ATTEMPT -> {
-                if (event.getHook() != null) {
-                    Vector pull = event.getHook().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.5);
-                    pull.setY(0.5);
-                    player.setVelocity(pull);
+                case IN_GROUND, FAILED_ATTEMPT -> {
+                    if (event.getHook() != null) {
+                        Vector pull = event.getHook().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.5);
+                        pull.setY(0.5);
+                        player.setVelocity(pull);
+                    }
                 }
             }
         }
@@ -42,12 +45,14 @@ public class GhlochesterListener implements Listener {
     public void onHookHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof FishHook hook)) return;
         if (!(hook.getShooter() instanceof Player player)) return;
+        if (player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()
+                && player.getInventory().getItemInMainHand().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:ghlochester")) {
 
-//        if (!isSpecialRod(player.getInventory().getItemInMainHand())) return;
+            if (event.getHitEntity() instanceof LivingEntity target) {
+                double finalDamage = 9.0 * 1.5;
+                target.damage(finalDamage, player);
+            }
 
-        if (event.getHitEntity() instanceof Player target) {
-            double finalDamage = 9.0 * 1.5;
-            target.damage(finalDamage, player);
         }
     }
 

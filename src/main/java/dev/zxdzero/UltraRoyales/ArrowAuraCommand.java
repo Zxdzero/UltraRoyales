@@ -51,20 +51,20 @@ public class ArrowAuraCommand implements CommandExecutor {
             double theta = Math.random() * 2 * Math.PI;
             Vector orbitVel = rotateAroundAxis(perpendicular, toArrow, theta);
 
-            // ✅ ADD: extra random rotation for variety
+            // Extra random rotation for variety
             double extraRotation = (Math.random() - 0.5) * Math.PI / 6; // ±15 degrees
             orbitVel = rotateAroundAxis(orbitVel, toArrow, extraRotation);
 
-            // ✅ Adjust vertical velocity if downward
+            // Adjust vertical velocity if downward
             if (orbitVel.getY() < 0) {
                 orbitVel.setY(orbitVel.getY() * 0.3);
             }
 
-            // ✅ Increase speed
+            // Increase speed
             double speed = 1.1 + Math.random() * 0.4; // 1.2–1.3
             orbitVel.multiply(speed);
 
-            // ✅ Move arrow 1.5 blocks *backwards* along its velocity vector
+            // Move arrow 1.5 blocks *backwards* along its velocity vector
             Location spawnLoc = arrowLoc.clone().subtract(orbitVel.clone().normalize().multiply(backwardOffset));
 
             // Spawn arrow
@@ -109,7 +109,7 @@ public class ArrowAuraCommand implements CommandExecutor {
         Vector currentVel = arrow.getVelocity();
         double currentSpeed = currentVel.length();
 
-        // Define a reference speed at which turnSpeed is max (tweak as needed)
+        // Define a reference speed at which turnSpeed is max
         double maxSpeed = 1.5;
 
         // Scale turn speed from 0 (at speed=0) to baseTurnSpeed (at or above maxSpeed)
@@ -124,22 +124,21 @@ public class ArrowAuraCommand implements CommandExecutor {
 
         double distance = toTarget.length();
 
-        // ✅ Repelling push if arrow is too close (below 1.5 blocks)
+        // Repelling push if arrow is too close (below 1.5 blocks)
         if (distance < 1.5) {
-            // Add small push away from the target
             Vector repel = toTarget.clone().normalize().multiply(-0.5 * (1.5 - distance));
             currentVel.add(repel);
             currentSpeed = currentVel.length(); // Recalculate speed after push
         }
 
-        // ✅ Recalculate desired direction after repelling
+        // Recalculate desired direction after repelling
         Vector desiredDir = toTarget.normalize();
         Vector currentDir = currentVel.clone().normalize();
 
         // Blend toward desired direction
         Vector newDir = currentDir.multiply(1 - turnSpeed).add(desiredDir.multiply(turnSpeed)).normalize();
 
-        // ✅ Reduce deceleration to keep tighter orbit
+        // Reduce deceleration to keep tighter orbit
         double adjustedSpeed = Math.max(currentSpeed, 0.5); // minimum speed clamp if needed
         Vector newVelocity = newDir.multiply(adjustedSpeed);
 

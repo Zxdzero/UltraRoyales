@@ -23,7 +23,6 @@ public class SkeletalBarberListener implements Listener {
 
     private final Map<UUID, Long> firstCriticalHit = new HashMap<>();
     private static final long TIME_WINDOW = 2000;
-    private static final Random random = new Random();
 
     private static UltraRoyales plugin = UltraRoyales.getPlugin();
 
@@ -71,18 +70,9 @@ public class SkeletalBarberListener implements Listener {
         Block groundBlock = world.getBlockAt(center.getBlockX(), center.getBlockY() - 1, center.getBlockZ());
         Material groundMaterial = groundBlock.getType();
 
-        // Epic explosion-style burst
-//        world.spawnParticle(Particle.EXPLOSION_EMITTER, center, 1, 0, 0, 0, 0);
-
-        // Debris shooting outward
         world.spawnParticle(Particle.BLOCK, center, 100, 1.5, 0.1, 1.5, 0.3, groundMaterial.createBlockData());
-
         world.spawnParticle(Particle.BLOCK_CRUMBLE, center, 100, 1.5, 0.1, 1.5, 0.3, groundMaterial.createBlockData());
-
-        // Sparks flying everywhere
         world.spawnParticle(Particle.CRIT, center, 20, 2, 0.5, 2, 0.2);
-
-        // Ground shockwave effect
         world.spawnParticle(Particle.SWEEP_ATTACK, center, 3, 2, 0, 2, 0);
 
         world.playSound(center, Sound.ITEM_MACE_SMASH_GROUND_HEAVY, 1.0f, 1.0f);
