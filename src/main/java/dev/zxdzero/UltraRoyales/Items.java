@@ -13,6 +13,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -21,10 +22,12 @@ import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Items {
@@ -90,6 +93,17 @@ public class Items {
             }
         });
 
+        // Bingo Spawn Egg
+        ItemActionRegistry.register(bingoSpawnEgg(), (player, item) -> {
+            RayTraceResult rayTraceResult = player.rayTraceBlocks(5);
+            if (rayTraceResult == null) return;
+
+            Skeleton skeleton = (Skeleton) player.getWorld().spawn(rayTraceResult.getHitPosition().toLocation(player.getWorld()), EntityType.SKELETON.getEntityClass());
+            skeleton.getEquipment().setItemInMainHand(null);
+            skeleton.getEquipment().setHelmet(new ItemStack(Material.ACACIA_FENCE_GATE));
+            skeleton.setCanPickupItems(false);
+        });
+
         // Sponge Saber
         ItemActionRegistry.register(spongeSaber(), (player, item) -> {
             NamespacedKey spongePower = new NamespacedKey("ultraroyales", "sponge_power");
@@ -120,7 +134,7 @@ public class Items {
                     if (removed > 10) {
                         meta.displayName(SpongeSaberName.WET.component);
                         meta.getPersistentDataContainer().set(spongePower, PersistentDataType.BOOLEAN, true);
-                        meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(spongePower, 8D, AttributeModifier.Operation.ADD_NUMBER));
+                        Objects.requireNonNull(meta.getAttributeModifiers()).put(Attribute.ATTACK_DAMAGE, new AttributeModifier(spongePower, 8D, AttributeModifier.Operation.ADD_SCALAR));
                         item.setItemMeta(meta);
                     }
                     CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 3);
@@ -130,6 +144,7 @@ public class Items {
                     player.setVelocity(dash);
                     meta.displayName(SpongeSaberName.DRY.component);
                     meta.getPersistentDataContainer().set(spongePower, PersistentDataType.BOOLEAN, false);
+                    meta.removeAttributeModifier(Attribute.ATTACK_DAMAGE);
                     item.setItemMeta(meta);
                     CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
                 }
@@ -215,6 +230,19 @@ public class Items {
         saber.setItemMeta(meta);
 
         return saber;
+    }
+
+    public static ItemStack bingoSpawnEgg() {
+        ItemStack bingoSpawn = new ItemStack(Material.SNIFFER_SPAWN_EGG);
+        ItemMeta meta = bingoSpawn.getItemMeta();
+        meta.displayName(Component.text("Bingo Spawn Egg").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:bingo_spawn_egg"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        bingoSpawn.setItemMeta(meta);
+
+        return bingoSpawn;
     }
 
     public static ItemStack skeletalBarber() {
