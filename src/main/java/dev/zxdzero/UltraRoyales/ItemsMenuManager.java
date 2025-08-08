@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,10 +28,9 @@ public class ItemsMenuManager implements Listener {
         inv.setItem(1, Items.dwarvenBow());
         inv.setItem(2, Items.ghlochester());
         inv.setItem(3, Items.spiderStaff());
-        inv.setItem(4, Items.fractialDwarvenBow());
-        inv.setItem(5, Items.spongeSaber());
-        inv.setItem(6, Items.skeletalBarber());
-        inv.setItem(7, Items.electricConch());
+        inv.setItem(4, Items.spongeSaber());
+        inv.setItem(5, Items.skeletalBarber());
+        inv.setItem(6, Items.electricConch());
         return inv;
     }
 }

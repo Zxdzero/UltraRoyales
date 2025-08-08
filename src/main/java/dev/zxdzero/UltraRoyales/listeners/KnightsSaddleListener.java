@@ -1,6 +1,8 @@
 package dev.zxdzero.UltraRoyales.listeners;
 
 import dev.zxdzero.UltraRoyales.Items;
+import dev.zxdzero.UltraRoyales.UltraRoyales;
+import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -17,7 +19,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class KnightsSaddleListener implements Listener {
 
-    private int cooldown = 2400;
+    private int cooldown = 120;
 
     @EventHandler
     public void onDismount(EntityDismountEvent e) {
@@ -31,16 +33,9 @@ public class KnightsSaddleListener implements Listener {
                         0.5, 1, 0.5,
                         0.05
                 );
-                horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.3375);
-                horse.getAttribute(Attribute.MAX_HEALTH).setBaseValue(30);
-                horse.setJumpStrength(1.0);
                 player.getWorld().playSound(player.getLocation(), Sound.ENTITY_HORSE_BREATHE, 1.0f, 1.0f);
                 player.setCooldown(Material.SADDLE, cooldown);
-                Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-                Objective objective = scoreboard.getObjective("knightshorse");
-                if (objective != null) {
-                    objective.getScore(player.getName()).setScore(cooldown);
-                }
+                CooldownRegistry.setCooldown(player, UltraRoyales.saddleCooldown, cooldown);
             }
         }
     }

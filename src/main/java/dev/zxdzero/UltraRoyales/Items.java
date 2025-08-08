@@ -3,9 +3,7 @@ package dev.zxdzero.UltraRoyales;
 import dev.zxdzero.ZxdzeroEvents.ItemHelper;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
-import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
@@ -13,7 +11,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
@@ -24,7 +23,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Items {
 
@@ -45,15 +43,9 @@ public class Items {
 
         // Knight's Saddle
         ItemActionRegistry.register(knightsSaddle(), (player, item) -> {
-            Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-            Objective objective = scoreboard.getObjective("knightshorse");
-            int cooldown = 0;
-            if (objective != null) {
-                cooldown = objective.getScore(player.getName()).getScore();
-            }
-
+            int cooldown = CooldownRegistry.getCooldown(player, UltraRoyales.saddleCooldown);
             if (cooldown != 0) {
-                player.sendMessage(Component.text("You must wait another " + cooldown/20 + " seconds to use this saddle!", NamedTextColor.RED));
+                player.sendMessage(Component.text("You must wait another " + cooldown + " seconds to use this saddle!", NamedTextColor.RED));
                 return;
             }
 
@@ -68,6 +60,9 @@ public class Items {
             horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
             horse.setInvulnerable(true);
             horse.setColor(Horse.Color.GRAY);
+            horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.3375);
+            horse.getAttribute(Attribute.MAX_HEALTH).setBaseValue(30);
+            horse.setJumpStrength(1.0);
             horse.getPersistentDataContainer().set(knightsHorse, PersistentDataType.BOOLEAN, true);
             horse.addPassenger(player);
 
@@ -162,19 +157,6 @@ public class Items {
         return bow;
     }
 
-    public static ItemStack fractialDwarvenBow() {
-        ItemStack bow = new ItemStack(Material.BOW);
-        ItemMeta meta = bow.getItemMeta();
-        meta.displayName(Component.text("Fractial's Dwarven Bow").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
-        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
-        customModelData.setStrings(List.of("ultraroyales:fractial_dwarvenbow"));
-        meta.setCustomModelDataComponent(customModelData);
-
-        bow.setItemMeta(meta);
-
-        return bow;
-    }
-
     public static ItemStack ghlochester() {
         ItemStack rod = new ItemStack(Material.FISHING_ROD);
         ItemMeta meta = rod.getItemMeta();
@@ -235,6 +217,8 @@ public class Items {
         ItemMeta meta = conch.getItemMeta();
         meta = ItemHelper.weaponBuilder(meta, 0, 4);
         meta.displayName(Component.text("Electric Conch").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.lore();
+        meta.setUnbreakable(true);
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:electricconch"));
         meta.setCustomModelDataComponent(customModelData);
