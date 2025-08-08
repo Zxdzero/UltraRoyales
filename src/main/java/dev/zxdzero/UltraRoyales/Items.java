@@ -98,7 +98,7 @@ public class Items {
 
                 if (player.isSneaking()) {
                     Location center = player.getLocation();
-                    int radius = 5;
+                    int radius = 8;
 
                     int removed = 0;
 
@@ -116,9 +116,6 @@ public class Items {
                             }
                         }
                     }
-
-                    System.out.println("DEBUG: Sponge Saber Used to remove: " + removed + " Blocks");
-
                     if (removed > 10) {
                         meta.displayName(SpongeSaberName.WET.component);
                         meta.getPersistentDataContainer().set(spongePower, PersistentDataType.BOOLEAN, true);
