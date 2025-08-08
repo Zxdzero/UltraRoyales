@@ -6,6 +6,7 @@ import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
@@ -20,6 +21,8 @@ import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +30,17 @@ import java.util.UUID;
 public class Items {
 
     public static final NamespacedKey knightsHorse = NamespacedKey.fromString("knightshorse", UltraRoyales.getPlugin());
+
+    public enum SpongeSaberName {
+        WET(Component.text("Wet Sponge Katana").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true)),
+        DRY(Component.text("Sponge Katana").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+
+        public final Component component;
+
+        SpongeSaberName(@NotNull Component component) {
+            this.component = component;
+        }
+    }
 
     public static void registerBehavior() {
 
@@ -78,36 +92,50 @@ public class Items {
 
         // Sponge Saber
         ItemActionRegistry.register(spongeSaber(), (player, item) -> {
+            NamespacedKey spongePower = new NamespacedKey("ultraroyales", "sponge_power");
+
             if (CooldownRegistry.getCooldown(player, UltraRoyales.saberCooldown) == 0) {
-                Location center = player.getLocation();
-                int radius = 5;
+                ItemMeta meta = item.getItemMeta();
 
-                int removed = 0;
+                if (player.isSneaking()) {
+                    Location center = player.getLocation();
+                    int radius = 5;
 
-                for (int x = -radius; x <= radius; x++) {
-                    for (int y = -radius; y <= radius; y++) {
-                        for (int z = -radius; z <= radius; z++) {
-                            Location loc = center.clone().add(x, y, z);
-                            if (center.distance(loc) > radius) continue;
+                    int removed = 0;
 
-                            Block block = loc.getBlock();
-                            if (block.getType() == Material.WATER || block.getType() == Material.BUBBLE_COLUMN) {
-                                block.setType(Material.AIR);
-                                removed++;
+                    for (int x = -radius; x <= radius; x++) {
+                        for (int y = -radius; y <= radius; y++) {
+                            for (int z = -radius; z <= radius; z++) {
+                                Location loc = center.clone().add(x, y, z);
+                                if (center.distance(loc) > radius) continue;
+
+                                Block block = loc.getBlock();
+                                if (block.getType() == Material.WATER || block.getType() == Material.BUBBLE_COLUMN) {
+                                    block.setType(Material.AIR);
+                                    removed++;
+                                }
                             }
                         }
                     }
-                }
-                System.out.println("Sponge Saber Used to remove: " + removed + " Blocks");
 
-                if (removed > 10) {
-                    ItemMeta meta = item.getItemMeta();
-                    meta.displayName(Component.text("Wet Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
-                    meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(NamespacedKey.fromString("ultraroyales:sponge_power"), 1D, AttributeModifier.Operation.ADD_NUMBER));
+                    System.out.println("DEBUG: Sponge Saber Used to remove: " + removed + " Blocks");
+
+                    if (removed > 10) {
+                        meta.displayName(SpongeSaberName.WET.component);
+                        meta.getPersistentDataContainer().set(spongePower, PersistentDataType.BOOLEAN, true);
+                        meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(spongePower, 8D, AttributeModifier.Operation.ADD_NUMBER));
+                        item.setItemMeta(meta);
+                    }
+                    CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 3);
+                } else if (Boolean.TRUE.equals(meta.getPersistentDataContainer().get(spongePower, PersistentDataType.BOOLEAN))) {
+                    Vector dash = player.getLocation().getDirection().normalize().multiply(2);
+                    dash.setY(0.2);
+                    player.setVelocity(dash);
+                    meta.displayName(SpongeSaberName.DRY.component);
+                    meta.getPersistentDataContainer().set(spongePower, PersistentDataType.BOOLEAN, false);
                     item.setItemMeta(meta);
+                    CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
                 }
-
-                CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 45);
             }
         });
     }
@@ -182,7 +210,7 @@ public class Items {
     public static ItemStack spongeSaber() {
         ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = saber.getItemMeta();
-        meta.displayName(Component.text("Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(SpongeSaberName.DRY.component);
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:sponge_saber"));
         meta.setCustomModelDataComponent(customModelData);
@@ -191,6 +219,7 @@ public class Items {
 
         return saber;
     }
+
     public static ItemStack skeletalBarber() {
         ItemStack staff = new ItemStack(Material.NETHERITE_SWORD);
         ItemMeta meta = staff.getItemMeta();
@@ -204,7 +233,7 @@ public class Items {
         return staff;
     }
 
- static ItemStack electricConch() {
+    static ItemStack electricConch() {
         ItemStack conch = new ItemStack(Material.TRIDENT);
         conch.addUnsafeEnchantment(Enchantment.RIPTIDE, 4);
         ItemMeta meta = conch.getItemMeta();
