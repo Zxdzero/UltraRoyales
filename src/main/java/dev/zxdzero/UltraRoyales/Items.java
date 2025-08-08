@@ -1,6 +1,5 @@
 package dev.zxdzero.UltraRoyales;
 
-import com.fractial.codec.api.CodecItemsApi;
 import dev.zxdzero.ZxdzeroEvents.ItemHelper;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
