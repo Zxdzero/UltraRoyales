@@ -1,5 +1,7 @@
 package dev.zxdzero.UltraRoyales;
 
+import dev.zxdzero.UltraRoyales.listeners.SpongeSaberListener;
+import dev.zxdzero.UltraRoyales.tooltip.Tooltip;
 import dev.zxdzero.ZxdzeroEvents.ItemHelper;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
@@ -28,17 +30,6 @@ import java.util.Objects;
 public class Items {
 
     public static final NamespacedKey knightsHorse = NamespacedKey.fromString("knightshorse", UltraRoyales.getPlugin());
-
-    public enum SpongeSaberName {
-        WET(Component.text("Wet Sponge Katana").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true)),
-        DRY(Component.text("Sponge Katana").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
-
-        public final Component component;
-
-        SpongeSaberName(@NotNull Component component) {
-            this.component = component;
-        }
-    }
 
     public static void registerBehavior() {
 
@@ -98,48 +89,8 @@ public class Items {
 
         // Sponge Saber
         ItemActionRegistry.register(spongeSaber(), (player, item) -> {
-            NamespacedKey spongePower = new NamespacedKey("ultraroyales", "sponge_power");
-
             if (CooldownRegistry.getCooldown(player, UltraRoyales.saberCooldown) == 0) {
-                ItemMeta meta = item.getItemMeta();
-
-                if (player.isSneaking()) {
-                    Location center = player.getLocation();
-                    int radius = 8;
-
-                    int removed = 0;
-
-                    for (int x = -radius; x <= radius; x++) {
-                        for (int y = -radius; y <= radius; y++) {
-                            for (int z = -radius; z <= radius; z++) {
-                                Location loc = center.clone().add(x, y, z);
-                                if (center.distance(loc) > radius) continue;
-
-                                Block block = loc.getBlock();
-                                if (block.getType() == Material.WATER || block.getType() == Material.BUBBLE_COLUMN) {
-                                    block.setType(Material.AIR);
-                                    removed++;
-                                }
-                            }
-                        }
-                    }
-                    if (removed > 10) {
-                        meta.displayName(SpongeSaberName.WET.component);
-                        meta.getPersistentDataContainer().set(spongePower, PersistentDataType.BOOLEAN, true);
-                        Objects.requireNonNull(meta.getAttributeModifiers()).put(Attribute.ATTACK_DAMAGE, new AttributeModifier(spongePower, 8D, AttributeModifier.Operation.ADD_SCALAR));
-                        item.setItemMeta(meta);
-                    }
-                    CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 3);
-                } else if (Boolean.TRUE.equals(meta.getPersistentDataContainer().get(spongePower, PersistentDataType.BOOLEAN))) {
-                    Vector dash = player.getLocation().getDirection().normalize().multiply(2);
-                    dash.setY(0.2);
-                    player.setVelocity(dash);
-                    meta.displayName(SpongeSaberName.DRY.component);
-                    meta.getPersistentDataContainer().set(spongePower, PersistentDataType.BOOLEAN, false);
-                    meta.removeAttributeModifier(Attribute.ATTACK_DAMAGE);
-                    item.setItemMeta(meta);
-                    CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
-                }
+                SpongeSaberListener.run(player, item);
             }
         });
     }
@@ -214,12 +165,14 @@ public class Items {
     public static ItemStack spongeSaber() {
         ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = saber.getItemMeta();
-        meta.displayName(SpongeSaberName.DRY.component);
+        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to dash"), Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water")));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:sponge_saber"));
         meta.setCustomModelDataComponent(customModelData);
 
         saber.setItemMeta(meta);
+
+        SpongeSaberListener.resetCounter(saber);
 
         return saber;
     }
