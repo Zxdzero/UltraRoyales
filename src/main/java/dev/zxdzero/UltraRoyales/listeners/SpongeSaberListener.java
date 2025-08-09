@@ -14,14 +14,11 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
-
-import java.util.Objects;
 
 public class SpongeSaberListener implements Listener {
     public static final NamespacedKey SPONGE_POWER = new NamespacedKey("ultra_royals", "sponge_power");
@@ -58,12 +55,7 @@ public class SpongeSaberListener implements Listener {
     }
 
     private static void resetAttribute(Player player, ItemStack item) {
-
-        System.out.println("RESET ???????????");
         if (!player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) return;
-
-        System.out.println("RESET TRUE");
-
         player.getInventory().setItemInMainHand(Items.spongeSaber());
     }
 
