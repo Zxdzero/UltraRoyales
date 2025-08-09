@@ -1,16 +1,15 @@
 package dev.zxdzero.UltraRoyales;
 
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.bukkit.Bukkit.getServer;
@@ -28,13 +27,12 @@ public class SpiderAIController {
 
     private SpiderAIController() {}
 
-    public static int spawnPlayerSpiders(Player player) {
+    public static void spawnPlayerSpiders(Player player) {
         removePlayerSpiders(player);
 
         UUID playerUUID = player.getUniqueId();
         Location spawnLocation = player.getLocation();
         Set<UUID> newSpiders = ConcurrentHashMap.newKeySet();
-        int spawnedCount = 0;
 
         for (int i = 0; i < MAX_SPIDERS_PER_PLAYER; i++) {
             try {
@@ -59,7 +57,6 @@ public class SpiderAIController {
                 UUID spiderUUID = spider.getUniqueId();
                 newSpiders.add(spiderUUID);
                 startSpiderControl(spider, player);
-                spawnedCount++;
 
             } catch (Exception e) {
                 plugin.getLogger().warning("Failed to spawn spider for player " + player.getName() + ": " + e.getMessage());
@@ -68,7 +65,7 @@ public class SpiderAIController {
 
         playerSpiders.put(playerUUID, newSpiders);
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_FIRECHARGE_USE, 1.0f, 1.0f);
-        return spawnedCount;
+        return;
     }
 
     public static void setPlayerSpidersTarget(Player player, LivingEntity target) {

@@ -1,6 +1,5 @@
 package dev.zxdzero.UltraRoyales;
 
-import dev.zxdzero.UltraRoyales.listeners.DwarvenBowListener;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.command.Command;
@@ -14,7 +13,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 public class ArrowAuraCommand implements CommandExecutor {
     @Override
