@@ -11,3 +11,6 @@ commands:
   bingoreset:
     description: cool
     permission: ultraroyales.command.bingoreset
+  withdrawheart:
+    description: cool
+    permission: ultraroyales.command.withdrawheart

@@ -1,6 +1,7 @@
 package dev.zxdzero.UltraRoyales;
 
 import dev.zxdzero.UltraRoyales.commands.BingoResetCommand;
+import dev.zxdzero.UltraRoyales.commands.WithdrawHeartCommand;
 import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
@@ -45,6 +46,7 @@ public final class UltraRoyales extends JavaPlugin {
 
         getCommand("arrowaura").setExecutor(new ArrowAuraCommand());
         getCommand("bingoreset").setExecutor(new BingoResetCommand());
+        getCommand("withdrawheart").setExecutor(new WithdrawHeartCommand());
 
         CooldownRegistry.registerCooldown(saddleCooldown, Material.SADDLE);
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
