@@ -1,8 +1,10 @@
 package dev.zxdzero.UltraRoyales;
 
+import dev.zxdzero.UltraRoyales.commands.BingoResetCommand;
 import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -39,8 +41,10 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SpiderStaffListener(), this);
         getServer().getPluginManager().registerEvents(new SkeletalBarberListener(), this);
         getServer().getPluginManager().registerEvents(new ElectricConchListener(), this);
+        getServer().getPluginManager().registerEvents(new BingoTheClownListener(), this);
 
         getCommand("arrowaura").setExecutor(new ArrowAuraCommand());
+        getCommand("bingoreset").setExecutor(new BingoResetCommand());
 
         CooldownRegistry.registerCooldown(saddleCooldown, Material.SADDLE);
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);

@@ -3,6 +3,7 @@ package dev.zxdzero.UltraRoyales;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
+import dev.zxdzero.UltraRoyales.listeners.BingoTheClownListener;
 import dev.zxdzero.UltraRoyales.listeners.SpongeSaberListener;
 import dev.zxdzero.UltraRoyales.tooltip.Tooltip;
 import dev.zxdzero.ZxdzeroEvents.ItemHelper;
@@ -13,6 +14,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -23,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.EnumSet;
@@ -77,6 +80,14 @@ public class Items {
             }
         });
 
+        // Heart item
+        ItemActionRegistry.register(heartItem(), (player, item) -> {
+            if (!player.isSneaking()) return;
+            AttributeInstance maxHealth = player.getAttribute(Attribute.MAX_HEALTH);
+            maxHealth.setBaseValue(maxHealth.getBaseValue() + 2);
+            item.setAmount(item.getAmount() - 1);
+        });
+
         // Bingo Spawn Egg
         ItemActionRegistry.register(bingoSpawnEgg(), (player, item) -> {
             RayTraceResult rayTraceResult = player.rayTraceBlocks(5);
@@ -90,30 +101,9 @@ public class Items {
             equipment.setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS));
             equipment.setBoots(new ItemStack(Material.DIAMOND_BOOTS));
             skeleton.setCanPickupItems(false);
-            Bukkit.getMobGoals().removeAllGoals(skeleton);
-            Bukkit.getMobGoals().addGoal(skeleton, 0, new Goal<Mob>() {
-                private final GoalKey<Mob> key = GoalKey.of(Mob.class, new NamespacedKey("ultra_royals", "mob"));
 
-                @Override
-                public boolean shouldActivate() {
-                    return true;
-                }
-
-                @Override
-                public boolean shouldStayActive() {
-                    return shouldActivate();
-                }
-
-                @Override
-                public GoalKey<Mob> getKey() {
-                    return key;
-                }
-
-                @Override
-                public EnumSet<GoalType> getTypes() {
-                    return EnumSet.of(GoalType.MOVE);
-                }
-            });
+            BingoTheClownListener.startMove(skeleton);
+            BingoTheClownListener.startFriendly(skeleton);
         });
 
         // Sponge Saber
@@ -122,6 +112,19 @@ public class Items {
                 SpongeSaberListener.run(player, item);
             }
         });
+    }
+
+    public static ItemStack heartItem() {
+        ItemStack heart = new ItemStack(Material.RESIN_BRICK);
+        ItemMeta meta = heart.getItemMeta();
+        meta.displayName(Component.text("Heart").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:heart"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        heart.setItemMeta(meta);
+
+        return heart;
     }
 
     public static ItemStack knightsSaddle() {

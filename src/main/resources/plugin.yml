@@ -8,3 +8,6 @@ commands:
   arrowaura:
     description: cool
     permission: ultraroyales.command.arrowaura
+  bingoreset:
+    description: cool
+    permission: ultraroyales.command.bingoreset

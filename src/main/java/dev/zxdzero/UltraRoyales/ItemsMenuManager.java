@@ -32,6 +32,9 @@ public class ItemsMenuManager implements Listener {
         inv.setItem(5, Items.skeletalBarber());
         inv.setItem(6, Items.electricConch());
         inv.setItem(7, Items.bingoSpawnEgg());
+        ItemStack heartItem = Items.heartItem();
+        heartItem.setAmount(64);
+        inv.setItem(8, heartItem);
         return inv;
     }
 }
