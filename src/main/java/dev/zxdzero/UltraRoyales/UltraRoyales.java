@@ -3,6 +3,7 @@ package dev.zxdzero.UltraRoyales;
 import dev.zxdzero.UltraRoyales.commands.BingoResetCommand;
 import dev.zxdzero.UltraRoyales.commands.WithdrawHeartCommand;
 import dev.zxdzero.UltraRoyales.listeners.*;
+import dev.zxdzero.UltraRoyales.listeners.scenarios.SpeedRoyale;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
 import org.bukkit.Bukkit;
@@ -45,9 +46,12 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ElectricConchListener(), this);
         getServer().getPluginManager().registerEvents(new BingoTheClownListener(), this);
 
+        ScenarioManager.registerScenario("speed_royale", new SpeedRoyale());
+
         getCommand("arrowaura").setExecutor(new ArrowAuraCommand());
         getCommand("bingoreset").setExecutor(new BingoResetCommand());
         getCommand("withdrawheart").setExecutor(new WithdrawHeartCommand());
+        getCommand("scenario").setExecutor(new ScenarioManager());
 
         CooldownRegistry.registerCooldown(saddleCooldown, Material.SADDLE);
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
@@ -58,6 +62,7 @@ public final class UltraRoyales extends JavaPlugin {
     @Override
     public void onDisable() {
         SpiderAIController.shutdown();
+        ScenarioManager.shutdown();
     }
 
     private static void registerRecipes() {
