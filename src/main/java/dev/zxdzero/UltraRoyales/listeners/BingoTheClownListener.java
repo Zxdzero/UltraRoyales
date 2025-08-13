@@ -83,6 +83,8 @@ public class BingoTheClownListener implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof Skeleton skeleton)) return;
         if (skeleton.getEquipment().getHelmet().getType() != Material.DIRT) return;
+        event.getDrops().clear();
+        event.setDroppedExp(0);
         BukkitRunnable runnable = runnableMap.remove(skeleton.getUniqueId());
         BukkitRunnable runnableF = runnableMapF.remove(skeleton.getUniqueId());
         if (runnable != null) {
