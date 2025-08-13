@@ -3,6 +3,7 @@ package dev.zxdzero.UltraRoyales;
 import dev.zxdzero.UltraRoyales.commands.BingoResetCommand;
 import dev.zxdzero.UltraRoyales.commands.WithdrawHeartCommand;
 import dev.zxdzero.UltraRoyales.listeners.*;
+import dev.zxdzero.UltraRoyales.listeners.scenarios.SpeedRoyale;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.joml.AxisAngle4f;
 
 import java.util.List;
 
@@ -44,9 +46,12 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ElectricConchListener(), this);
         getServer().getPluginManager().registerEvents(new BingoTheClownListener(), this);
 
+        ScenarioManager.registerScenario("speed_royale", new SpeedRoyale());
+
         getCommand("arrowaura").setExecutor(new ArrowAuraCommand());
         getCommand("bingoreset").setExecutor(new BingoResetCommand());
         getCommand("withdrawheart").setExecutor(new WithdrawHeartCommand());
+        getCommand("scenario").setExecutor(new ScenarioManager());
 
         CooldownRegistry.registerCooldown(saddleCooldown, Material.SADDLE);
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
@@ -57,6 +62,7 @@ public final class UltraRoyales extends JavaPlugin {
     @Override
     public void onDisable() {
         SpiderAIController.shutdown();
+        ScenarioManager.shutdown();
     }
 
     private static void registerRecipes() {
@@ -64,9 +70,10 @@ public final class UltraRoyales extends JavaPlugin {
                 Items.spiderStaff(),
                 List.of(
                         ItemStack.of(Material.NETHERITE_INGOT, 1),
-                        ItemStack.of(Material.GOLD_BLOCK, 1),
+                        ItemStack.of(Material.GOLD_BLOCK, 8),
                         ItemStack.of(Material.FERMENTED_SPIDER_EYE, 8)
-                )
+                ),
+                0.75f, -0.4f
         ));
         RecipeManager.registerRecipe(plugin, "dwarven_bow", new RecipeManager.PedestalRecipe(
                 Items.dwarvenBow(),
@@ -76,7 +83,9 @@ public final class UltraRoyales extends JavaPlugin {
                         ItemStack.of(Material.AMETHYST_SHARD, 16),
                         ItemStack.of(Material.BOW, 1)
 
-                )
+                ),
+                0.5f, new AxisAngle4f((float)(Math.PI/2), 1f, 1f, 1f),
+                0
         ));
         RecipeManager.registerRecipe(plugin, "sponge_saber", new RecipeManager.PedestalRecipe(
                 Items.spongeSaber(),
@@ -94,7 +103,8 @@ public final class UltraRoyales extends JavaPlugin {
                         ItemStack.of(Material.BREEZE_ROD, 16),
                         ItemStack.of(Material.LEAD, 8),
                         ItemStack.of(Material.HEAVY_CORE, 1)
-                )
+                ),
+                0.6f, 0.15f
         ));
         RecipeManager.registerRecipe(plugin, "knights_saddle", new RecipeManager.PedestalRecipe(
                 Items.knightsSaddle(),
@@ -121,7 +131,8 @@ public final class UltraRoyales extends JavaPlugin {
                         ItemStack.of(Material.NETHERITE_SCRAP, 2),
                         ItemStack.of(Material.DIAMOND_SWORD, 1),
                         ItemStack.of(Material.BONE, 32)
-                )
+                ),
+                0.5f, -0.1f
         ));
     }
 }

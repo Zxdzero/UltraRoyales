@@ -9,8 +9,12 @@ commands:
     description: cool
     permission: ultraroyales.command.arrowaura
   bingoreset:
-    description: cool
+    description: resets number of bingo attempts
     permission: ultraroyales.command.bingoreset
   withdrawheart:
-    description: cool
+    description: turns one of your player hearts into a physical item
     permission: ultraroyales.command.withdrawheart
+  scenario:
+    description: Manage pedestals
+    usage: /pedestal <start|end> [scenario]
+    permission: ultraroyales.command.scenario
