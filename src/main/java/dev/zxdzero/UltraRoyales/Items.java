@@ -21,9 +21,11 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
+import org.bukkit.inventory.meta.components.EquippableComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
@@ -96,10 +98,42 @@ public class Items {
             Skeleton skeleton = (Skeleton) player.getWorld().spawn(rayTraceResult.getHitPosition().toLocation(player.getWorld()), EntityType.SKELETON.getEntityClass());
             skeleton.getEquipment().setItemInMainHand(null);
             EntityEquipment equipment = skeleton.getEquipment();
-            equipment.setHelmet(new ItemStack(Material.DIRT));
-            equipment.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
-            equipment.setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS));
-            equipment.setBoots(new ItemStack(Material.DIAMOND_BOOTS));
+
+            ItemStack bingoHelmet = new ItemStack(Material.DIRT);
+            ItemMeta bingoHelmetMeta = bingoHelmet.getItemMeta();
+            CustomModelDataComponent customModelData = bingoHelmetMeta.getCustomModelDataComponent();
+            customModelData.setStrings(List.of("ultraroyales:bingo_head"));
+            bingoHelmetMeta.setCustomModelDataComponent(customModelData);
+            bingoHelmet.setItemMeta(bingoHelmetMeta);
+
+            ItemStack bingoChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
+            ItemMeta bingoChestplateMeta = bingoChestplate.getItemMeta();
+            EquippableComponent bingoChestplateEquippableComponent = bingoChestplateMeta.getEquippable();
+            bingoChestplateEquippableComponent.setSlot(EquipmentSlot.CHEST);
+            bingoChestplateEquippableComponent.setModel(new NamespacedKey("ultraroyales", "bingo"));
+            bingoChestplateMeta.setEquippable(bingoChestplateEquippableComponent);
+            bingoChestplate.setItemMeta(bingoChestplateMeta);
+
+            ItemStack bingoLeggings = new ItemStack(Material.DIAMOND_LEGGINGS);
+            ItemMeta bingoLeggingsMeta = bingoLeggings.getItemMeta();
+            EquippableComponent bingoLeggingsEquippableComponent = bingoLeggingsMeta.getEquippable();
+            bingoLeggingsEquippableComponent.setSlot(EquipmentSlot.LEGS);
+            bingoLeggingsEquippableComponent.setModel(new NamespacedKey("ultraroyales", "bingo"));
+            bingoLeggingsMeta.setEquippable(bingoLeggingsEquippableComponent);
+            bingoLeggings.setItemMeta(bingoLeggingsMeta);
+
+            ItemStack bingoBoots = new ItemStack(Material.DIAMOND_BOOTS);
+            ItemMeta bingoBootsMeta = bingoBoots.getItemMeta();
+            EquippableComponent bingoBootsEquippableComponent = bingoBootsMeta.getEquippable();
+            bingoBootsEquippableComponent.setSlot(EquipmentSlot.FEET);
+            bingoBootsEquippableComponent.setModel(new NamespacedKey("ultraroyales", "bingo"));
+            bingoBootsMeta.setEquippable(bingoBootsEquippableComponent);
+            bingoBoots.setItemMeta(bingoBootsMeta);
+
+            equipment.setHelmet(bingoHelmet);
+            equipment.setChestplate(bingoChestplate);
+            equipment.setLeggings(bingoLeggings);
+            equipment.setBoots(bingoBoots);
             skeleton.setCanPickupItems(false);
 
             BingoTheClownListener.startMove(skeleton);
@@ -117,6 +151,7 @@ public class Items {
     public static ItemStack heartItem() {
         ItemStack heart = new ItemStack(Material.RESIN_BRICK);
         ItemMeta meta = heart.getItemMeta();
+        meta.lore(List.of(Tooltip.SHIFT_RIGHT_CLICK.toComponent("to use")));
         meta.displayName(Component.text("Heart").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:heart"));
@@ -130,6 +165,7 @@ public class Items {
     public static ItemStack knightsSaddle() {
         ItemStack saddle = new ItemStack(Material.SADDLE);
         ItemMeta meta = saddle.getItemMeta();
+        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to mount the knights horse")));
         meta.displayName(Component.text("Knight's Saddle").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:knightssaddle"));
@@ -183,6 +219,7 @@ public class Items {
     public static ItemStack spiderStaff() {
         ItemStack saber = new ItemStack(Material.NAUTILUS_SHELL);
         ItemMeta meta = saber.getItemMeta();
+        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to summon spiders")));
         meta.displayName(Component.text("Spider Staff", NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:spiderstaff"));
@@ -239,9 +276,10 @@ public class Items {
         ItemStack conch = new ItemStack(Material.TRIDENT);
         conch.addUnsafeEnchantment(Enchantment.RIPTIDE, 4);
         ItemMeta meta = conch.getItemMeta();
+        // TODO: Make it Left Click
+        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to water burst")));
         meta = ItemHelper.weaponBuilder(meta, 0, 4);
         meta.displayName(Component.text("Electric Conch").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
-        meta.lore();
         meta.setUnbreakable(true);
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:electricconch"));
