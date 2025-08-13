@@ -5,12 +5,19 @@ import dev.zxdzero.UltraRoyales.listeners.scenarios.Scenario;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,11 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
-    private UltraRoyales plugin = UltraRoyales.getPlugin();
+    private static UltraRoyales plugin = UltraRoyales.getPlugin();
 
     public static String activeScenario = null;
     private static HashMap<String, Scenario> scenarios = new HashMap<>();
     private static BukkitTask tickTask;
+
+    public static NamespacedKey relogMarker = new NamespacedKey(plugin, "relog_marker");
 
 
     @Override
@@ -60,7 +69,7 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
         else if (args[0].equalsIgnoreCase("end")) {
             if (activeScenario != null) {
                 sender.sendMessage(Component.text("Ending scenario " + activeScenario, NamedTextColor.YELLOW));
-                shutdown();
+                endScenario();
             } else {
                 sender.sendMessage(Component.text("There is no scenario active!", NamedTextColor.RED));
                 return true;
@@ -88,10 +97,30 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
         scenarios.put(id,scenario);
     }
 
-    public static void shutdown() {
+    public static void endScenario() {
         tickTask.cancel();
         HandlerList.unregisterAll(scenarios.get(activeScenario));
         scenarios.get(activeScenario).end();
         activeScenario = null;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SURVIVAL) {
+                player.getInventory().clear();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDisconnect(PlayerQuitEvent e) {
+        if (activeScenario != null && e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+            e.getPlayer().getPersistentDataContainer().set(relogMarker, PersistentDataType.BOOLEAN, true);
+        }
+    }
+
+    @EventHandler
+    public void onConnect(PlayerJoinEvent e) {
+        if (activeScenario == null && e.getPlayer().getPersistentDataContainer().getOrDefault(relogMarker, PersistentDataType.BOOLEAN, false)) {
+            e.getPlayer().getInventory().clear();
+        }
+        e.getPlayer().getPersistentDataContainer().remove(relogMarker);
     }
 }

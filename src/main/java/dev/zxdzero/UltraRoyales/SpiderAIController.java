@@ -54,6 +54,9 @@ public class SpiderAIController {
                 spider.setRemoveWhenFarAway(false);
                 spider.getPersistentDataContainer().set(SPIDER_TAG, PersistentDataType.BYTE, (byte) 1);
 
+                spider.setTarget(null);
+                spider.setAggressive(false);
+
                 UUID spiderUUID = spider.getUniqueId();
                 newSpiders.add(spiderUUID);
                 startSpiderControl(spider, player);
@@ -71,6 +74,10 @@ public class SpiderAIController {
     public static void setPlayerSpidersTarget(Player player, LivingEntity target) {
         Set<UUID> spiderUUIDs = playerSpiders.get(player.getUniqueId());
         if (spiderUUIDs == null) return;
+
+        if (target != null && target.getUniqueId().equals(player.getUniqueId())) {
+            return;
+        }
 
         for (UUID spiderUUID : spiderUUIDs) {
             Entity entity = plugin.getServer().getEntity(spiderUUID);
@@ -165,13 +172,21 @@ public class SpiderAIController {
                     return;
                 }
 
-                if (spider.getTarget() == currentOwner) {
+                LivingEntity currentTarget = spider.getTarget();
+                if (currentTarget != null && currentTarget.getUniqueId().equals(ownerUUID)) {
                     spider.setTarget(null);
+                    spider.setAggressive(false);
                 }
 
                 UUID targetUUID = spiderTargets.get(spiderUUID);
 
                 if (targetUUID != null) {
+                    // Don't allow targeting the owner even if somehow set
+                    if (targetUUID.equals(ownerUUID)) {
+                        spiderTargets.remove(spiderUUID);
+                        return;
+                    }
+
                     Entity targetEntity = plugin.getServer().getEntity(targetUUID);
                     if (targetEntity instanceof LivingEntity target && target.isValid() && !target.isDead()) {
                         if (target != currentOwner && spider.getTarget() != target) {

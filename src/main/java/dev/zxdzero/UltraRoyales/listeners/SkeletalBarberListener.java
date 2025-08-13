@@ -32,7 +32,7 @@ public class SkeletalBarberListener implements Listener {
         Player player = (Player) event.getDamager();
 
         ItemStack weapon = player.getInventory().getItemInMainHand();
-        if (!weapon.getItemMeta().hasCustomModelDataComponent() || !event.isCritical()) return;
+        if (!weapon.hasItemMeta() || !weapon.getItemMeta().hasCustomModelDataComponent() || !event.isCritical()) return;
         if (!weapon.getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:skeletalbarber")) return;
 
         UUID playerUUID = player.getUniqueId();
