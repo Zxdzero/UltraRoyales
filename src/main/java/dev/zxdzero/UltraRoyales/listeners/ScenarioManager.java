@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,10 +23,8 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
     private static UltraRoyales plugin = UltraRoyales.getPlugin();
@@ -59,6 +58,19 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
 
             Scenario newScenario = scenarios.get(args[1]);
             activeScenario = args[1];
+
+            List<Location> pods = PodRecorder.getPods();
+            List<Player> players = Bukkit.getOnlinePlayers().stream()
+                    .filter(p -> p.getGameMode() == GameMode.SURVIVAL)
+                    .collect(Collectors.toList());
+            Collections.shuffle(players);
+
+            for (int i = 0; i < players.size() && i < pods.size(); i++) {
+                Location pod = pods.get(i);
+                Location facingPod = faceTowards(pod, new Location(pod.getWorld(), 0, pod.getY() + 1, 0));
+                players.get(i).teleport(facingPod);
+            }
+
             newScenario.start();
             plugin.getServer().getPluginManager().registerEvents(newScenario, plugin);
             tickTask = Bukkit.getScheduler().runTaskTimer(plugin, newScenario::tick, 0L, 5L);
@@ -122,5 +134,21 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
             e.getPlayer().getInventory().clear();
         }
         e.getPlayer().getPersistentDataContainer().remove(relogMarker);
+    }
+
+    public Location faceTowards(Location from, Location to) {
+        Location result = from.clone();
+
+        // Calculate differences
+        double dx = to.getX() - from.getX();
+        double dz = to.getZ() - from.getZ();
+
+        // Math.atan2 returns radians, so convert to degrees
+        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+
+        result.setYaw(yaw);
+        result.setPitch(0f); // Look straight ahead (optional)
+
+        return result;
     }
 }
