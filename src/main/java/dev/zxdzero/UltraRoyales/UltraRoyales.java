@@ -7,6 +7,7 @@ import dev.zxdzero.UltraRoyales.listeners.scenarios.MaceRoyale;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.SpeedRoyale;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -59,6 +60,8 @@ public final class UltraRoyales extends JavaPlugin {
         CooldownRegistry.registerCooldown(staffCooldown, Material.NAUTILUS_SHELL);
         CooldownRegistry.registerCooldown(saberCooldown, Material.DIAMOND_SWORD);
         CooldownRegistry.registerCooldown(conchCooldown, Material.TRIDENT);
+
+        Bukkit.removeRecipe(NamespacedKey.minecraft("mace"));
     }
 
     @Override
