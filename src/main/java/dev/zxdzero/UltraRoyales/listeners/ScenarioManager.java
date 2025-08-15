@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
@@ -32,6 +33,7 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
     public static String activeScenario = null;
     private static HashMap<String, Scenario> scenarios = new HashMap<>();
     private static BukkitTask tickTask;
+    private final static Set<UUID> frozenPlayers = new HashSet<>();
 
     public static NamespacedKey relogMarker = new NamespacedKey(plugin, "relog_marker");
 
@@ -47,29 +49,36 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
                 sender.sendMessage(Component.text("There is already an active scenario!", NamedTextColor.RED));
                 return true;
             }
-            if (args.length == 1) {
-                sender.sendMessage(Component.text("Please specify a scenario!", NamedTextColor.RED));
-                return true;
-            }
-            if (!scenarios.containsKey(args[1])) {
-                sender.sendMessage(Component.text("Invalid scenario!", NamedTextColor.RED));
-                return true;
-            }
 
-            Scenario newScenario = scenarios.get(args[1]);
-            activeScenario = args[1];
+            Scenario newScenario;
+
+            if (args.length == 1) {
+                newScenario = scenarios.get("default");
+                activeScenario = "default";
+            } else {
+
+                if (!scenarios.containsKey(args[1])) {
+                    sender.sendMessage(Component.text("Invalid scenario!", NamedTextColor.RED));
+                    return true;
+                }
+
+                newScenario = scenarios.get(args[1]);
+                activeScenario = args[1];
+            }
 
             List<Location> pods = PodRecorder.getPods();
             List<Player> players = Bukkit.getOnlinePlayers().stream()
                     .filter(p -> p.getGameMode() == GameMode.SURVIVAL)
                     .collect(Collectors.toList());
             Collections.shuffle(players);
+            players.forEach(p -> frozenPlayers.add(p.getUniqueId()));
 
             for (int i = 0; i < players.size() && i < pods.size(); i++) {
                 Location pod = pods.get(i);
-                Location facingPod = faceTowards(pod, new Location(pod.getWorld(), 0, pod.getY() + 1, 0));
+                Location facingPod = faceTowards(pod.add(0.5, 0, 0.5), new Location(pod.getWorld(), 0, pod.getY() + 1, 0));
                 players.get(i).teleport(facingPod);
             }
+            Bukkit.getScheduler().runTaskLater(plugin, frozenPlayers::clear, 400);
 
             newScenario.start();
             plugin.getServer().getPluginManager().registerEvents(newScenario, plugin);
@@ -151,4 +160,20 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
 
         return result;
     }
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e) {
+        if (!frozenPlayers.contains(e.getPlayer().getUniqueId())) return;
+
+        Location from = e.getFrom();
+        Location to = e.getTo();
+
+        // Allow yaw/pitch changes only
+        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
+            return;
+        }
+
+        e.setTo(from);
+        e.setCancelled(true);
+    }
+
 }

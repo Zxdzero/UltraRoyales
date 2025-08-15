@@ -5,6 +5,7 @@ import dev.zxdzero.UltraRoyales.commands.PodCommand;
 import dev.zxdzero.UltraRoyales.commands.WithdrawHeartCommand;
 import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.MaceRoyale;
+import dev.zxdzero.UltraRoyales.listeners.scenarios.Scenario;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.SpeedRoyale;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
@@ -53,6 +54,7 @@ public final class UltraRoyales extends JavaPlugin {
 
         ScenarioManager.registerScenario("speed_royale", new SpeedRoyale());
         ScenarioManager.registerScenario("mace_royale", new MaceRoyale());
+        ScenarioManager.registerScenario("default", new Scenario());
 
         getCommand("arrowaura").setExecutor(new ArrowAuraCommand());
         getCommand("bingoreset").setExecutor(new BingoResetCommand());
