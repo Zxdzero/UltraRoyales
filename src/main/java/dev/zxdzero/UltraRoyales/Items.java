@@ -51,11 +51,21 @@ public class Items {
                 player.sendMessage(Component.text("Dismount to use this saddle!", NamedTextColor.RED));
                 return;
             }
+
+            ItemStack horseArmor = new ItemStack(Material.IRON_HORSE_ARMOR);
+            ItemMeta horseArmorMeta = horseArmor.getItemMeta();
+            EquippableComponent horseArmorEquippableComponent = horseArmorMeta.getEquippable();
+            horseArmorEquippableComponent.setSlot(EquipmentSlot.BODY);
+            horseArmorEquippableComponent.setModel(new NamespacedKey("ultraroyales", "knight_horse"));
+            horseArmorMeta.setEquippable(horseArmorEquippableComponent);
+            horseArmor.setItemMeta(horseArmorMeta);
+
             Horse horse = (Horse) player.getWorld().spawnEntity(player.getLocation(), EntityType.HORSE);
             horse.setTamed(true);
             horse.setOwner(player);
             horse.setAdult();
             horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
+            horse.getInventory().setArmor(horseArmor);
             horse.setInvulnerable(true);
             horse.setColor(Horse.Color.GRAY);
             horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.3375);
@@ -249,7 +259,7 @@ public class Items {
     public static ItemStack bingoSpawnEgg() {
         ItemStack bingoSpawn = new ItemStack(Material.SNIFFER_SPAWN_EGG);
         ItemMeta meta = bingoSpawn.getItemMeta();
-        meta.displayName(Component.text("Bingo Spawn Egg").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(Component.text("Bingo the Clown").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:bingo_spawn_egg"));
         meta.setCustomModelDataComponent(customModelData);
