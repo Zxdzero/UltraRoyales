@@ -142,5 +142,15 @@ public final class UltraRoyales extends JavaPlugin {
                 ),
                 0.5f, -0.1f
         ));
+        RecipeManager.registerRecipe(plugin, "bingo", new RecipeManager.PedestalRecipe(
+                Items.bingoSpawnEgg(),
+                List.of(
+                        ItemStack.of(Material.DIAMOND_BLOCK, 4),
+                        Items.heartItem(),
+                        ItemStack.of(Material.CRAFTER, 16),
+                        ItemStack.of(Material.MUSIC_DISC_CAT, 1)
+                ),
+                0.5f, -0.1f
+        ));
     }
 }

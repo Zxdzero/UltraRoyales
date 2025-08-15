@@ -2,6 +2,7 @@ package dev.zxdzero.UltraRoyales.listeners;
 
 import dev.zxdzero.UltraRoyales.Items;
 import dev.zxdzero.UltraRoyales.UltraRoyales;
+import dev.zxdzero.UltraRoyales.tooltip.Tooltip;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,13 +16,17 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
+import java.util.List;
+
 public class SpongeSaberListener implements Listener {
     public static final NamespacedKey SPONGE_POWER = new NamespacedKey("ultra_royals", "sponge_power");
+    public static final NamespacedKey SPONGE_SPEED = new NamespacedKey("ultra_royals", "sponge_speed");
     public static final int MAX_POWER = 3;
 
     public static void run(Player player, ItemStack item) {
@@ -50,7 +55,17 @@ public class SpongeSaberListener implements Listener {
     private static void setAttribute(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta.hasAttributeModifiers()) return;
-        meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(SPONGE_POWER, 8, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.HAND));
+        meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(SPONGE_POWER, 8, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
+        meta.addAttributeModifier(Attribute.ATTACK_SPEED, new AttributeModifier(SPONGE_SPEED, 1.6 - 4, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.lore(List.of(
+                Tooltip.RIGHT_CLICK.toComponent("to dash"),
+                Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water"),
+                Component.text(""),
+                Component.text("When in Main Hand:", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
+                Component.text(" 8 Attack Damage", NamedTextColor.DARK_GREEN).decoration(TextDecoration.ITALIC, false),
+                Component.text(" 1.6 Attack Speed", NamedTextColor.DARK_GREEN).decoration(TextDecoration.ITALIC, false)
+        ));
         item.setItemMeta(meta);
     }
 
