@@ -2,6 +2,9 @@ package dev.zxdzero.UltraRoyales;
 
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class SpiderAIController {
+public class SpiderAIController implements Listener {
 
     private static final Plugin plugin = UltraRoyales.getPlugin();
     private static final int MAX_SPIDERS_PER_PLAYER = 10;
@@ -24,8 +27,6 @@ public class SpiderAIController {
     private static final Map<UUID, Set<UUID>> playerSpiders = new ConcurrentHashMap<>();
     private static final Map<UUID, UUID> spiderTargets = new ConcurrentHashMap<>();
     private static final Map<UUID, BukkitRunnable> spiderTasks = new ConcurrentHashMap<>();
-
-    private SpiderAIController() {}
 
     public static void spawnPlayerSpiders(Player player) {
         removePlayerSpiders(player);
@@ -107,22 +108,15 @@ public class SpiderAIController {
         Set<UUID> spiderUUIDs = playerSpiders.get(player.getUniqueId());
         if (spiderUUIDs == null) return 0;
 
-        int count = 0;
-        Iterator<UUID> iterator = spiderUUIDs.iterator();
-
-        while (iterator.hasNext()) {
-            UUID spiderUUID = iterator.next();
-            Entity entity = plugin.getServer().getEntity(spiderUUID);
-
-            if (entity instanceof CaveSpider && entity.isValid() && !entity.isDead()) {
-                count++;
-            } else {
-                iterator.remove();
-                cleanupSpider(spiderUUID);
+        spiderUUIDs.removeIf(uuid -> {
+            Entity entity = plugin.getServer().getEntity(uuid);
+            if (!(entity instanceof CaveSpider) || !entity.isValid() || entity.isDead()) {
+                cleanupSpider(uuid);
+                return true;
             }
-        }
-
-        return count;
+            return false;
+        });
+        return spiderUUIDs.size();
     }
 
     public static void shutdown() {
@@ -249,4 +243,28 @@ public class SpiderAIController {
             spiders.remove(spiderUUID);
         }
     }
+
+    private static UUID getOwnerUUIDFromSpider(CaveSpider spider) {
+        for (Map.Entry<UUID, Set<UUID>> entry : playerSpiders.entrySet()) {
+            if (entry.getValue().contains(spider.getUniqueId())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    @EventHandler
+    public void onTarget(EntityTargetEvent event) {
+        if (!(event.getEntity() instanceof CaveSpider spider)) return;
+        if (!(event.getTarget() instanceof Player player)) return;
+
+        // Only cancel if this spider is one of ours
+        if (spider.getPersistentDataContainer().has(SPIDER_TAG, PersistentDataType.BYTE)) {
+            UUID ownerUUID = getOwnerUUIDFromSpider(spider);
+            if (ownerUUID != null && ownerUUID.equals(player.getUniqueId())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
 }

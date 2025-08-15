@@ -143,7 +143,12 @@ public class Items {
         // Sponge Saber
         ItemActionRegistry.register(spongeSaber(), (player, item) -> {
             if (CooldownRegistry.getCooldown(player, UltraRoyales.saberCooldown) == 0) {
-                SpongeSaberListener.run(player, item);
+                SpongeSaberListener.collect(player, item);
+            }
+        });
+        ItemActionRegistry.register(wetSpongeSaber(), (player, item) -> {
+            if (CooldownRegistry.getCooldown(player, UltraRoyales.saberCooldown) == 0) {
+                SpongeSaberListener.dash(player, item);
             }
         });
     }
@@ -234,14 +239,27 @@ public class Items {
     public static ItemStack spongeSaber() {
         ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = saber.getItemMeta();
-        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to dash"), Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water")));
+        meta.lore(List.of(Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water")));
+        meta.displayName(Component.text("Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:sponge_saber"));
         meta.setCustomModelDataComponent(customModelData);
 
         saber.setItemMeta(meta);
 
-        SpongeSaberListener.resetCounter(saber);
+        return saber;
+    }
+
+    public static ItemStack wetSpongeSaber() {
+        ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = saber.getItemMeta();
+        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to dash")));
+        meta.displayName(Component.text("Wet Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:wet_sponge_saber"));
+        meta.setCustomModelDataComponent(customModelData);
+
+        saber.setItemMeta(meta);
 
         return saber;
     }

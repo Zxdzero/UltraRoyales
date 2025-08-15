@@ -49,6 +49,7 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BingoTheClownListener(), this);
         getServer().getPluginManager().registerEvents(new ScenarioManager(), this);
         getServer().getPluginManager().registerEvents(new PodRecorder(), this);
+        getServer().getPluginManager().registerEvents(new SpiderAIController(), this);
 
         ScenarioManager.registerScenario("speed_royale", new SpeedRoyale());
         ScenarioManager.registerScenario("mace_royale", new MaceRoyale());

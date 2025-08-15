@@ -2,7 +2,6 @@ package dev.zxdzero.UltraRoyales.listeners;
 
 import dev.zxdzero.UltraRoyales.Items;
 import dev.zxdzero.UltraRoyales.UltraRoyales;
-import dev.zxdzero.UltraRoyales.tooltip.Tooltip;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -10,107 +9,45 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.EquipmentSlotGroup;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
-import java.util.List;
-
 public class SpongeSaberListener implements Listener {
     public static final NamespacedKey SPONGE_POWER = new NamespacedKey("ultra_royals", "sponge_power");
-    public static final NamespacedKey SPONGE_SPEED = new NamespacedKey("ultra_royals", "sponge_speed");
-    public static final int MAX_POWER = 3;
+    public static final int MAX_POWER = 1;
 
-    public static void run(Player player, ItemStack item) {
-        if (player.isSneaking() && getCounter(item) <= MAX_POWER) {
+    public static void collect(Player player, ItemStack item) {
+        if (player.isSneaking()) {
             int removed = clearWater(player);
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_SPLASH, 1, 1);
 
-            if (removed >= 8) {
-                int power = increaseCounter(item);
-
-                if (power == MAX_POWER) {
-                    setAttribute(item);
-                }
-            } else {
+            if (removed < 8) {
                 player.sendMessage(Component.text("You did not collect enough Water!").color(NamedTextColor.RED));
+            } else if (player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) {
+                player.getInventory().setItemInMainHand(Items.wetSpongeSaber());
             }
 
             CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 1);
-        } else if (getCounter(item) >= MAX_POWER) {
-            dash(player);
-            resetCounter(item);
-            resetAttribute(player, item);
-            CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
         }
     }
 
-    private static void setAttribute(ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-        if (meta.hasAttributeModifiers()) return;
-        meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier(SPONGE_POWER, 8, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
-        meta.addAttributeModifier(Attribute.ATTACK_SPEED, new AttributeModifier(SPONGE_SPEED, 1.6 - 4, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND));
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.lore(List.of(
-                Tooltip.RIGHT_CLICK.toComponent("to dash"),
-                Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water"),
-                Component.text(""),
-                Component.text("When in Main Hand:", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
-                Component.text(" 8 Attack Damage", NamedTextColor.DARK_GREEN).decoration(TextDecoration.ITALIC, false),
-                Component.text(" 1.6 Attack Speed", NamedTextColor.DARK_GREEN).decoration(TextDecoration.ITALIC, false)
-        ));
-        item.setItemMeta(meta);
-    }
-
-    private static void resetAttribute(Player player, ItemStack item) {
-        if (!player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) return;
-        player.getInventory().setItemInMainHand(Items.spongeSaber());
-    }
-
-    private static void dash(Player player) {
-        Vector dash = player.getLocation().getDirection().normalize().multiply(2);
-        dash.setY(0.2);
-        player.setVelocity(dash);
-    }
-
-    private static void displayPower(ItemStack item, int power) {
-        ItemMeta meta = item.getItemMeta();
-        String text = power == 3 ? "Wet Sponge Katana" : "Sponge Katana";
-        meta.displayName(Component.text(text).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true).append(Component.text(" (" + power + "/" + MAX_POWER + ")").color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.BOLD, false)));
-        item.setItemMeta(meta);
-    }
-
-    private static int getCounter(ItemStack item) {
-        return item.getItemMeta().getPersistentDataContainer().getOrDefault(SPONGE_POWER, PersistentDataType.INTEGER, 0);
-    }
-
-    private static int getCounter(ItemMeta meta) {
-        return meta.getPersistentDataContainer().getOrDefault(SPONGE_POWER, PersistentDataType.INTEGER, 0);
-    }
-
-    private static int increaseCounter(ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-        int power = getCounter(meta);
-        if (power >= MAX_POWER) return power;
-        power++;
-        meta.getPersistentDataContainer().set(SPONGE_POWER, PersistentDataType.INTEGER, power);
-        item.setItemMeta(meta);
-        displayPower(item, power);
-        return power;
-    }
-
-    public static void resetCounter(ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-        meta.getPersistentDataContainer().set(SPONGE_POWER, PersistentDataType.INTEGER, 0);
-        item.setItemMeta(meta);
-        displayPower(item, 0);
+    public static void dash(Player player, ItemStack item) {
+        if (!player.isSneaking()) {
+            Vector dash = player.getLocation().getDirection().normalize().multiply(2);
+            dash.setY(0.2);
+            player.setVelocity(dash);
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SHULKER_SHOOT, 1, 1);
+            player.playSound(player, Sound.ENTITY_SHULKER_SHOOT, 1, 1);
+            if (!player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) return;
+            player.getInventory().setItemInMainHand(Items.spongeSaber());
+            CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
+        }
     }
 
     private static int clearWater(Player player) {

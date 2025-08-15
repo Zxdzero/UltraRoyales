@@ -20,8 +20,7 @@ import java.util.UUID;
 
 public class SkeletalBarberListener implements Listener {
 
-    private final Map<UUID, Long> firstCriticalHit = new HashMap<>();
-    private static final long TIME_WINDOW = 2000;
+    private final Map<UUID, Integer> criticalHits = new HashMap<>();
 
     private static UltraRoyales plugin = UltraRoyales.getPlugin();
 
@@ -36,28 +35,22 @@ public class SkeletalBarberListener implements Listener {
         if (!weapon.getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:skeletalbarber")) return;
 
         UUID playerUUID = player.getUniqueId();
-        long currentTime = System.currentTimeMillis();
 
-        if (!firstCriticalHit.containsKey(playerUUID)) {
-            firstCriticalHit.put(playerUUID, currentTime);
+        if (!criticalHits.containsKey(playerUUID)) {
+            criticalHits.put(playerUUID, 1);
+        } else if (criticalHits.get(playerUUID) < 4){
+            criticalHits.replace(playerUUID, criticalHits.get(playerUUID) + 1);
         } else {
-            long firstHitTime = firstCriticalHit.get(playerUUID);
-            long timeDifference = currentTime - firstHitTime;
-            if (timeDifference <= TIME_WINDOW) {
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    entity.setVelocity(entity.getVelocity().add(new Vector(0, 0.7, 0)));
-                }, 1L);
-                entity.addPotionEffect(new PotionEffect(
-                        PotionEffectType.WITHER,
-                        40,
-                        1
-                ));
-                barberEffects(entity.getLocation());
-                firstCriticalHit.remove(playerUUID);
-
-            } else {
-                firstCriticalHit.put(playerUUID, currentTime);
-            }
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                entity.setVelocity(entity.getVelocity().add(new Vector(0, 0.7, 0)));
+            }, 1L);
+            entity.addPotionEffect(new PotionEffect(
+                    PotionEffectType.WITHER,
+                    40,
+                    1
+            ));
+            barberEffects(entity.getLocation());
+            criticalHits.remove(playerUUID);
         }
     }
 
