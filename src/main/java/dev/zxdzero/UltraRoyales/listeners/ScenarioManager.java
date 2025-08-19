@@ -33,7 +33,6 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
     public static String activeScenario = null;
     private static HashMap<String, Scenario> scenarios = new HashMap<>();
     private static BukkitTask tickTask;
-    private final static Set<UUID> frozenPlayers = new HashSet<>();
 
     public static NamespacedKey relogMarker = new NamespacedKey(plugin, "relog_marker");
 
@@ -65,20 +64,6 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
                 newScenario = scenarios.get(args[1]);
                 activeScenario = args[1];
             }
-
-            List<Location> pods = PodRecorder.getPods();
-            List<Player> players = Bukkit.getOnlinePlayers().stream()
-                    .filter(p -> p.getGameMode() == GameMode.SURVIVAL)
-                    .collect(Collectors.toList());
-            Collections.shuffle(players);
-            players.forEach(p -> frozenPlayers.add(p.getUniqueId()));
-
-            for (int i = 0; i < players.size() && i < pods.size(); i++) {
-                Location pod = pods.get(i);
-                Location facingPod = faceTowards(pod.add(0.5, 0, 0.5), new Location(pod.getWorld(), 0, pod.getY() + 1, 0));
-                players.get(i).teleport(facingPod);
-            }
-            Bukkit.getScheduler().runTaskLater(plugin, frozenPlayers::clear, 400);
 
             newScenario.start();
             plugin.getServer().getPluginManager().registerEvents(newScenario, plugin);
@@ -143,37 +128,6 @@ public class ScenarioManager implements CommandExecutor, TabExecutor, Listener {
             e.getPlayer().getInventory().clear();
         }
         e.getPlayer().getPersistentDataContainer().remove(relogMarker);
-    }
-
-    public Location faceTowards(Location from, Location to) {
-        Location result = from.clone();
-
-        // Calculate differences
-        double dx = to.getX() - from.getX();
-        double dz = to.getZ() - from.getZ();
-
-        // Math.atan2 returns radians, so convert to degrees
-        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
-
-        result.setYaw(yaw);
-        result.setPitch(0f); // Look straight ahead (optional)
-
-        return result;
-    }
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e) {
-        if (!frozenPlayers.contains(e.getPlayer().getUniqueId())) return;
-
-        Location from = e.getFrom();
-        Location to = e.getTo();
-
-        // Allow yaw/pitch changes only
-        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
-            return;
-        }
-
-        e.setTo(from);
-        e.setCancelled(true);
     }
 
 }
