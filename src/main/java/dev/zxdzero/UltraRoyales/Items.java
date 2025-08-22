@@ -305,7 +305,7 @@ public class Items {
         conch.addUnsafeEnchantment(Enchantment.RIPTIDE, 4);
         ItemMeta meta = conch.getItemMeta();
         // TODO: Make it Left Click
-        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to water burst")));
+        meta.lore(List.of(Tooltip.LEFT_CLICK.toComponent("to water burst")));
         meta = ItemHelper.weaponBuilder(meta, 0, 4);
         meta.displayName(Component.text("Electric Conch").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         meta.setUnbreakable(true);

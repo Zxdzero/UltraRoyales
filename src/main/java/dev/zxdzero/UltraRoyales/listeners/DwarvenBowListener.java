@@ -14,6 +14,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
+import java.util.Random;
+
 public class DwarvenBowListener implements Listener {
 
     @EventHandler
@@ -22,26 +24,33 @@ public class DwarvenBowListener implements Listener {
             if (e.getBow().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:dwarvenbow")) {
                 arrow.addCustomEffect(new PotionEffect(
                         PotionEffectType.MINING_FATIGUE,
-                        600,  // 30 seconds duration
+                        200,  // 10 seconds duration
                         0     // Mining Fatigue I
                 ), true);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (arrow.isDead() || arrow.isOnGround()) {
-                            cancel();
-                            return;
+
+                // 50% of homing effect
+                Random rand = new Random();
+                boolean win = rand.nextBoolean();
+
+                if (win) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if (arrow.isDead() || arrow.isOnGround()) {
+                                cancel();
+                                return;
+                            }
+
+                            LivingEntity target = findClosestTarget(arrow, e.getEntity(), 20); // 20 block search radius
+                            if (target != null) {
+                                steerArrow(arrow, target.getLocation(), 0.3); // 0.3 = turning speed
+                            }
+
+                            arrow.getWorld().spawnParticle(Particle.ASH, arrow.getLocation(), 2);
                         }
 
-                        LivingEntity target = findClosestTarget(arrow, e.getEntity(), 20); // 20 block search radius
-                        if (target != null) {
-                            steerArrow(arrow, target.getLocation(), 0.3); // 0.3 = turning speed
-                        }
-
-                        arrow.getWorld().spawnParticle(Particle.ASH, arrow.getLocation(), 2);
-                    }
-
-                }.runTaskTimer(UltraRoyales.getPlugin(), 1, 1);
+                    }.runTaskTimer(UltraRoyales.getPlugin(), 1, 1);
+                }
             }
         }
     }

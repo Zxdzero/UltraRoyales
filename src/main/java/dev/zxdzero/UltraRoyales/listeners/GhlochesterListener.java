@@ -49,7 +49,7 @@ public class GhlochesterListener implements Listener {
                 && player.getInventory().getItemInMainHand().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:ghlochester")) {
 
             if (event.getHitEntity() instanceof LivingEntity target) {
-                double finalDamage = 9.0 * 1.5;
+                double finalDamage = 9.0; // Removed: `* 1.5`
                 target.damage(finalDamage, player);
             }
 

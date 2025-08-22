@@ -32,7 +32,7 @@ public class BingoTheClownListener implements Listener {
     private static final Map<UUID, BukkitRunnable> runnableMap = new HashMap<>();
     private static final Map<UUID, BukkitRunnable> runnableMapF = new HashMap<>();
 
-    private static final int MAX_TRIES = 4; // Actual max tries + 1 (3)
+    private static final int MAX_TRIES = 5 + 1; // Actual max tries + 1
     private static final int delayBetweenTasks = 20 * 3;
 
     String[] messages = {
@@ -128,7 +128,7 @@ public class BingoTheClownListener implements Listener {
                 }
 
                 Random rand = new Random();
-                boolean win = rand.nextBoolean();
+                boolean win = rand.nextDouble() < 0.66;
 
                 int lastDelay = delayBetweenTasks * messages.length;
 

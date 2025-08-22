@@ -30,7 +30,9 @@ public class SpongeSaberListener implements Listener {
             if (removed < 8) {
                 player.sendMessage(Component.text("You did not collect enough Water!").color(NamedTextColor.RED));
             } else if (player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) {
+                var enchantments = item.getEnchantments();
                 player.getInventory().setItemInMainHand(Items.wetSpongeSaber());
+                player.getInventory().getItemInMainHand().addEnchantments(enchantments);
             }
 
             CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 1);
@@ -45,7 +47,9 @@ public class SpongeSaberListener implements Listener {
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SHULKER_SHOOT, 1, 1);
             player.playSound(player, Sound.ENTITY_SHULKER_SHOOT, 1, 1);
             if (!player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) return;
+            var enchantments = item.getEnchantments();
             player.getInventory().setItemInMainHand(Items.spongeSaber());
+            player.getInventory().getItemInMainHand().addEnchantments(enchantments);
             CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
         }
     }

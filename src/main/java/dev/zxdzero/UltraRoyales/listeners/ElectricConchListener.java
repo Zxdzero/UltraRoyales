@@ -77,7 +77,7 @@ public class ElectricConchListener implements Listener {
                 }
             }.runTaskTimer(plugin, 0L, 1L);
 
-            CooldownRegistry.setCooldown(player, UltraRoyales.conchCooldown, 60);
+            CooldownRegistry.setCooldown(player, UltraRoyales.conchCooldown, 60, false);
         }
     }
 
