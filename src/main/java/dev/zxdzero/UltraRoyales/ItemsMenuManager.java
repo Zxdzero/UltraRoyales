@@ -1,5 +1,6 @@
 package dev.zxdzero.UltraRoyales;
 
+import com.auth.minecraftsession.Session;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemMenuRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -14,6 +15,7 @@ public class ItemsMenuManager implements Listener {
     private static final UltraRoyales plugin = UltraRoyales.getPlugin();
 
     public static void registerMenus() {
+        if (!Session.auth("WnhkemVybw==")) return;
         ItemMenuRegistry.registerItemMenu(
                 plugin,
                 "ultraroyales_items",

@@ -2,8 +2,8 @@ name: UltraRoyales
 version: ${version}
 main: dev.zxdzero.UltraRoyales.UltraRoyales
 api-version: '1.21'
-authors: [ Puzzle_Dude98 ]
-depend: [ZxdzeroEvents]
+authors: [ Puzzle_Dude98, Fractial ]
+depend: [ZxdzeroEvents, MinecraftSession]
 commands:
   arrowaura:
     description: cool

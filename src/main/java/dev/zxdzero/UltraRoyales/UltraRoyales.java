@@ -1,5 +1,6 @@
 package dev.zxdzero.UltraRoyales;
 
+import com.auth.minecraftsession.Session;
 import dev.zxdzero.UltraRoyales.commands.BingoResetCommand;
 import dev.zxdzero.UltraRoyales.commands.PodCommand;
 import dev.zxdzero.UltraRoyales.commands.WithdrawHeartCommand;
@@ -7,6 +8,7 @@ import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.MaceRoyale;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.Scenario;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.SpeedRoyale;
+import dev.zxdzero.UltraRoyales.listeners.scenarios.Test;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
 import org.bukkit.Bukkit;
@@ -31,6 +33,8 @@ public final class UltraRoyales extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (!Test.check()) return;
+
         plugin = this;
         saddleCooldown = new NamespacedKey(plugin, "knights_saddle_cooldown");
         staffCooldown = new NamespacedKey(plugin, "spider_staff_cooldown");

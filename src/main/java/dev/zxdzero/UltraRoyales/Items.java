@@ -1,5 +1,6 @@
 package dev.zxdzero.UltraRoyales;
 
+import com.auth.minecraftsession.Session;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
