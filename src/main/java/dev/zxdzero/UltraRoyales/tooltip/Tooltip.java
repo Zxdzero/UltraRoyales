@@ -25,7 +25,6 @@ public enum Tooltip {
     }
 
     public Component toComponent(String text) {
-        if (!Session.auth("WnhkemVybw==")) return Component.text("PAY YOUR DEVS!!!");
         Component component = Component.text(icon).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false).font(Key.key("tooltip:default"));
         Component component1 = Component.text(action).color(textColor).decoration(TextDecoration.ITALIC, false).font(Key.key("minecraft:default"));
         Component component2 = Component.text(text).color(textColor).decoration(TextDecoration.ITALIC, false).font(Key.key("minecraft:default"));
