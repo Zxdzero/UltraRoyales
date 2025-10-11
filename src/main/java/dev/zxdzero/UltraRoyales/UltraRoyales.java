@@ -1,6 +1,5 @@
 package dev.zxdzero.UltraRoyales;
 
-import com.auth.minecraftsession.Session;
 import dev.zxdzero.UltraRoyales.commands.BingoResetCommand;
 import dev.zxdzero.UltraRoyales.commands.PodCommand;
 import dev.zxdzero.UltraRoyales.commands.WithdrawHeartCommand;
@@ -8,7 +7,6 @@ import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.MaceRoyale;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.Scenario;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.SpeedRoyale;
-import dev.zxdzero.UltraRoyales.listeners.scenarios.Test;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.RecipeManager;
 import org.bukkit.Bukkit;
@@ -33,7 +31,6 @@ public final class UltraRoyales extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (!Test.check()) return;
 
         plugin = this;
         saddleCooldown = new NamespacedKey(plugin, "knights_saddle_cooldown");
@@ -83,8 +80,8 @@ public final class UltraRoyales extends JavaPlugin {
                 Items.spiderStaff(),
                 List.of(
                         ItemStack.of(Material.NETHERITE_INGOT, 1),
-                        ItemStack.of(Material.GOLD_BLOCK, 8),
-                        ItemStack.of(Material.FERMENTED_SPIDER_EYE, 8)
+                        ItemStack.of(Material.GOLD_BLOCK, 4),
+                        ItemStack.of(Material.FERMENTED_SPIDER_EYE, 4)
                 ),
                 0.75f, -0.4f
         ));
@@ -104,7 +101,7 @@ public final class UltraRoyales extends JavaPlugin {
                 Items.spongeSaber(),
                 List.of(
                         ItemStack.of(Material.SPONGE, 8),
-                        ItemStack.of(Material.BUCKET, 64),
+                        ItemStack.of(Material.BUCKET, 16),
                         ItemStack.of(Material.BLAZE_ROD, 4),
                         ItemStack.of(Material.DIAMOND_SWORD, 1)
                 )
@@ -124,16 +121,16 @@ public final class UltraRoyales extends JavaPlugin {
                 List.of(
                         ItemStack.of(Material.ENCHANTED_GOLDEN_APPLE, 1),
                         ItemStack.of(Material.SADDLE, 1),
-                        ItemStack.of(Material.ANVIL, 8),
+                        ItemStack.of(Material.ANVIL, 2),
                         ItemStack.of(Material.GOLDEN_CARROT, 16)
                 )
         ));
         RecipeManager.registerRecipe(plugin, "electric_conch", new RecipeManager.PedestalRecipe(
                 Items.electricConch(),
                 List.of(
-                        ItemStack.of(Material.NAUTILUS_SHELL, 4),
+                        ItemStack.of(Material.NAUTILUS_SHELL, 1),
                         ItemStack.of(Material.HEART_OF_THE_SEA, 1),
-                        ItemStack.of(Material.COPPER_BLOCK, 32),
+                        ItemStack.of(Material.COPPER_BLOCK, 8),
                         ItemStack.of(Material.GUNPOWDER, 16)
                 )
         ));
@@ -147,15 +144,15 @@ public final class UltraRoyales extends JavaPlugin {
                 ),
                 0.5f, -0.1f
         ));
-        RecipeManager.registerRecipe(plugin, "bingo", new RecipeManager.PedestalRecipe(
-                Items.bingoSpawnEgg(),
-                List.of(
-                        ItemStack.of(Material.DIAMOND_BLOCK, 4),
-                        Items.heartItem(),
-                        ItemStack.of(Material.CRAFTER, 16),
-                        ItemStack.of(Material.MUSIC_DISC_CAT, 1)
-                ),
-                0.5f, -0.1f
-        ));
+//        RecipeManager.registerRecipe(plugin, "bingo", new RecipeManager.PedestalRecipe(
+//                Items.bingoSpawnEgg(),
+//                List.of(
+//                        ItemStack.of(Material.DIAMOND_BLOCK, 4),
+//                        Items.heartItem(),
+//                        ItemStack.of(Material.CRAFTER, 16),
+//                        ItemStack.of(Material.MUSIC_DISC_CAT, 1)
+//                ),
+//                0.5f, -0.1f
+//        ));
     }
 }

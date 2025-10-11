@@ -24,7 +24,7 @@ public class DwarvenBowListener implements Listener {
             if (e.getBow().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:dwarvenbow")) {
                 arrow.addCustomEffect(new PotionEffect(
                         PotionEffectType.MINING_FATIGUE,
-                        200,  // 10 seconds duration
+                        100,  // 5 seconds duration
                         0     // Mining Fatigue I
                 ), true);
 

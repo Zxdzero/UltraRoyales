@@ -1,6 +1,5 @@
 package dev.zxdzero.UltraRoyales;
 
-import com.auth.minecraftsession.Session;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
@@ -67,11 +66,10 @@ public class Items {
             horse.setAdult();
             horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
             horse.getInventory().setArmor(horseArmor);
-            horse.setInvulnerable(true);
             horse.setColor(Horse.Color.GRAY);
             horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.3375);
-            horse.getAttribute(Attribute.MAX_HEALTH).setBaseValue(30);
-            horse.setJumpStrength(1.0);
+            horse.getAttribute(Attribute.MAX_HEALTH).setBaseValue(40);
+            horse.setJumpStrength(0.7);
             horse.getPersistentDataContainer().set(knightsHorse, PersistentDataType.BOOLEAN, true);
             horse.addPassenger(player);
 
@@ -303,7 +301,7 @@ public class Items {
 
     static ItemStack electricConch() {
         ItemStack conch = new ItemStack(Material.TRIDENT);
-        conch.addUnsafeEnchantment(Enchantment.RIPTIDE, 4);
+        conch.addUnsafeEnchantment(Enchantment.RIPTIDE, 3);
         ItemMeta meta = conch.getItemMeta();
         // TODO: Make it Left Click
         meta.lore(List.of(Tooltip.LEFT_CLICK.toComponent("to water burst")));

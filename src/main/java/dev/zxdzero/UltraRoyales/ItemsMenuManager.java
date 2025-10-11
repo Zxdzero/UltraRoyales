@@ -1,6 +1,5 @@
 package dev.zxdzero.UltraRoyales;
 
-import com.auth.minecraftsession.Session;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemMenuRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,7 +14,6 @@ public class ItemsMenuManager implements Listener {
     private static final UltraRoyales plugin = UltraRoyales.getPlugin();
 
     public static void registerMenus() {
-        if (!Session.auth("WnhkemVybw==")) return;
         ItemMenuRegistry.registerItemMenu(
                 plugin,
                 "ultraroyales_items",
@@ -33,7 +31,7 @@ public class ItemsMenuManager implements Listener {
         inv.setItem(4, Items.spongeSaber());
         inv.setItem(5, Items.skeletalBarber());
         inv.setItem(6, Items.electricConch());
-        inv.setItem(7, Items.bingoSpawnEgg());
+//        inv.setItem(7, Items.bingoSpawnEgg());
         ItemStack heartItem = Items.heartItem();
         heartItem.setAmount(64);
         inv.setItem(8, heartItem);

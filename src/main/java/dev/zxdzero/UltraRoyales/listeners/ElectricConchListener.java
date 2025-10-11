@@ -1,5 +1,6 @@
 package dev.zxdzero.UltraRoyales.listeners;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import dev.zxdzero.UltraRoyales.UltraRoyales;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import net.kyori.adventure.text.Component;
@@ -21,7 +22,7 @@ public class ElectricConchListener implements Listener {
 
     private final UltraRoyales plugin = UltraRoyales.getPlugin();
     private final double WAVE_RADIUS = 10.0; // Maximum wave radius
-    private final int STUN_DURATION = 60; // 3 seconds
+    private final int STUN_DURATION = 20; // 1 seconds
     private final double KNOCKBACK_STRENGTH = 1.5;
 
     @EventHandler
@@ -40,45 +41,50 @@ public class ElectricConchListener implements Listener {
             Location center = player.getLocation();
             center.getWorld().playSound(center, Sound.ENTITY_PLAYER_SPLASH_HIGH_SPEED, 2.0f, 0.5f);
 
-            new BukkitRunnable() {
-                double radius = 1.0;
-
-                @Override
-                public void run() {
-                    if (radius > WAVE_RADIUS) {
-                        cancel();
-                        return;
-                    }
-
-                    createTidalWaveEffect(center, radius);
-
-                    for (Entity target : center.getWorld().getLivingEntities()) {
-                        if (target.equals(player)) continue;
-
-                        double distance = target.getLocation().distance(center);
-                        if (distance <= radius + 0.5 && distance >= radius) {
-                            if (target instanceof Player player) {
-                                // Apply stun effects
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, STUN_DURATION, 3));
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, STUN_DURATION, 2));
-                            }
-
-                            // Knockback effect
-                            Vector direction = target.getLocation().subtract(center).toVector().normalize();
-                            direction.setY(0.4); // Add upward component
-                            direction.multiply(KNOCKBACK_STRENGTH);
-                            target.setVelocity(direction);
-
-                            target.getWorld().spawnParticle(Particle.SPLASH, target.getLocation().add(0, 1, 0), 15, 0.3, 0.3, 0.3, 0.2);
-                        }
-                    }
-
-                    radius += 0.6;
-                }
-            }.runTaskTimer(plugin, 0L, 1L);
+            createWaveTask(center, player).runTaskTimer(plugin, 0L, 1L);
+            createWaveTask(center, player).runTaskTimer(plugin, 40L, 1L);
 
             CooldownRegistry.setCooldown(player, UltraRoyales.conchCooldown, 60, false);
         }
+    }
+
+    private BukkitRunnable createWaveTask(Location center, Player player) {
+        return new BukkitRunnable() {
+            double radius = 1.0;
+
+            @Override
+            public void run() {
+                if (radius > WAVE_RADIUS) {
+                    cancel();
+                    return;
+                }
+
+                createTidalWaveEffect(center, radius);
+
+                for (Entity target : center.getWorld().getLivingEntities()) {
+                    if (target.equals(player)) continue;
+
+                    double distance = target.getLocation().distance(center);
+                    if (distance <= radius + 0.5 && distance >= radius) {
+                        if (target instanceof Player player) {
+                            // Apply stun effects
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, STUN_DURATION, 255));
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, STUN_DURATION, 255));
+                        }
+
+                        // Knockback effect
+                        Vector direction = target.getLocation().subtract(center).toVector().normalize();
+                        direction.setY(0.4); // Add upward component
+                        direction.multiply(KNOCKBACK_STRENGTH);
+                        target.setVelocity(direction);
+
+                        target.getWorld().spawnParticle(Particle.SPLASH, target.getLocation().add(0, 1, 0), 15, 0.3, 0.3, 0.3, 0.2);
+                    }
+                }
+
+                radius += 0.6;
+            }
+        };
     }
 
     private void createTidalWaveEffect(Location center, double radius) {
@@ -121,6 +127,13 @@ public class ElectricConchListener implements Listener {
                     center.getWorld().spawnParticle(Particle.BUBBLE_POP, innerLoc, 2, 0.2, 0.1, 0.2, 0);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJump(PlayerJumpEvent e) {
+        if (e.getPlayer().getActivePotionEffects().contains((new PotionEffect(PotionEffectType.SLOWNESS, STUN_DURATION, 255)))) {
+            e.setCancelled(true);
         }
     }
 }

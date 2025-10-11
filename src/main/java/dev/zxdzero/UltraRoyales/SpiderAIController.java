@@ -28,6 +28,10 @@ public class SpiderAIController implements Listener {
     private static final Map<UUID, UUID> spiderTargets = new ConcurrentHashMap<>();
     private static final Map<UUID, BukkitRunnable> spiderTasks = new ConcurrentHashMap<>();
 
+    public static Map<UUID, Set<UUID>> getPlayerSpiders() {
+        return playerSpiders;
+    }
+
     public static void spawnPlayerSpiders(Player player) {
         removePlayerSpiders(player);
 

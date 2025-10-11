@@ -17,8 +17,10 @@ public class GhlochesterListener implements Listener {
     public void onFish(PlayerFishEvent event) {
         Player player = event.getPlayer();
 
-        if (player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()
-                && player.getInventory().getItemInMainHand().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:ghlochester")) {
+        if ((player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()
+                && player.getInventory().getItemInMainHand().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:ghlochester")) ||
+                (player.getInventory().getItemInOffHand().hasItemMeta() && player.getInventory().getItemInOffHand().getItemMeta().hasCustomModelDataComponent()
+                && player.getInventory().getItemInOffHand().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:ghlochester"))) {
 
             switch (event.getState()) {
                 case CAUGHT_ENTITY -> {
@@ -26,13 +28,13 @@ public class GhlochesterListener implements Listener {
                     if (caught instanceof LivingEntity target) {
 
                         // Pull target towards shooter
-                        Vector pull = player.getLocation().toVector().subtract(target.getLocation().toVector()).normalize().multiply(1.5);
+                        Vector pull = player.getLocation().toVector().subtract(target.getLocation().toVector()).normalize().multiply(1.2);
                         target.setVelocity(pull);
                     }
                 }
                 case IN_GROUND, FAILED_ATTEMPT -> {
                     if (event.getHook() != null) {
-                        Vector pull = event.getHook().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.5);
+                        Vector pull = event.getHook().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.2);
                         pull.setY(0.5);
                         player.setVelocity(pull);
                     }

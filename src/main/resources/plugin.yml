@@ -1,9 +1,10 @@
 name: UltraRoyales
 version: ${version}
 main: dev.zxdzero.UltraRoyales.UltraRoyales
+bootstrap: dev.zxdzero.UltraRoyales.UltraRoyalesBootstrap
 api-version: '1.21'
 authors: [ Puzzle_Dude98, Fractial ]
-depend: [ZxdzeroEvents, MinecraftSession]
+depend: [ZxdzeroEvents]
 commands:
   arrowaura:
     description: cool

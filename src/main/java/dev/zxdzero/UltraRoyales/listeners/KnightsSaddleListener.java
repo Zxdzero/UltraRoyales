@@ -19,7 +19,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class KnightsSaddleListener implements Listener {
 
-    private int cooldown = 120;
+    private int cooldown = 180;
 
     @EventHandler
     public void onDismount(EntityDismountEvent e) {
