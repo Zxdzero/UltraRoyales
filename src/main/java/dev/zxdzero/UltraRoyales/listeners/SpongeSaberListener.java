@@ -33,6 +33,7 @@ public class SpongeSaberListener implements Listener {
                 var enchantments = item.getEnchantments();
                 player.getInventory().setItemInMainHand(Items.wetSpongeSaber());
                 player.getInventory().getItemInMainHand().addEnchantments(enchantments);
+
             }
 
             CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 1);
@@ -48,9 +49,14 @@ public class SpongeSaberListener implements Listener {
             player.playSound(player, Sound.ENTITY_SHULKER_SHOOT, 1, 1);
             if (!player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) return;
             var enchantments = item.getEnchantments();
-            player.getInventory().setItemInMainHand(Items.spongeSaber());
-            player.getInventory().getItemInMainHand().addEnchantments(enchantments);
-            CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
+            int power = item.getPersistentDataContainer().get(SPONGE_POWER, PersistentDataType.INTEGER);
+            if (power > 1) {
+                player.getInventory().setItemInMainHand(Items.wetSpongeSaber(power - 1));
+                CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 0.75);
+            } else {
+                player.getInventory().setItemInMainHand(Items.spongeSaber());
+                CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
+            }
         }
     }
 

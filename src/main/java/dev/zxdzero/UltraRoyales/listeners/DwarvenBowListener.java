@@ -1,27 +1,42 @@
 package dev.zxdzero.UltraRoyales.listeners;
 
 import dev.zxdzero.UltraRoyales.UltraRoyales;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
+import org.checkerframework.checker.units.qual.N;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class DwarvenBowListener implements Listener {
+
+    private NamespacedKey dwarvenArrow = new NamespacedKey(UltraRoyales.getPlugin(), "dwarven_arrow");
 
     @EventHandler
     public void onBowFire(EntityShootBowEvent e) {
         if (e.getBow().getItemMeta().hasCustomModelDataComponent() && e.getProjectile() instanceof Arrow arrow) {
             if (e.getBow().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:dwarvenbow")) {
+
+                arrow.getPersistentDataContainer().set(
+                        dwarvenArrow,
+                        PersistentDataType.BYTE,
+                        (byte) 1
+                );
+
                 arrow.addCustomEffect(new PotionEffect(
                         PotionEffectType.MINING_FATIGUE,
                         100,  // 5 seconds duration
@@ -134,4 +149,16 @@ public class DwarvenBowListener implements Listener {
         arrow.setVelocity(newVelocity);
     }
 
+    @EventHandler
+    public void onHit(ProjectileHitEvent e) {
+        if (!(e.getEntity() instanceof Arrow arrow)) return;
+
+        if (arrow.getPersistentDataContainer().has(dwarvenArrow, PersistentDataType.BYTE)) {
+            Objects.requireNonNull(Bukkit.getPlayer(Objects.requireNonNull(arrow.getOwnerUniqueId()))).addPotionEffect(
+                    new PotionEffect(PotionEffectType.HASTE,
+                    40,  // 2 seconds duration
+                    0     // Haste I
+            ));
+        }
+    }
 }

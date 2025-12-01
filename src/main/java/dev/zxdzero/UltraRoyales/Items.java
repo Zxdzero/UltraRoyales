@@ -6,15 +6,18 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import dev.zxdzero.UltraRoyales.listeners.BingoTheClownListener;
 import dev.zxdzero.UltraRoyales.listeners.SpongeSaberListener;
 import dev.zxdzero.ZxdzeroEvents.ItemHelper;
+import dev.zxdzero.ZxdzeroEvents.ZxdzeroEvents;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
 import dev.zxdzero.ZxdzeroEvents.tooltip.Tooltip;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -22,6 +25,7 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
@@ -248,7 +252,10 @@ public class Items {
     public static ItemStack spongeSaber() {
         ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = saber.getItemMeta();
-        meta.lore(List.of(Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water")));
+        meta = ItemHelper.weaponBuilder(meta, 8.5, 1.6);
+        List<Component> lore = meta.lore();
+        lore.addFirst(Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water"));
+        meta.lore(lore);
         meta.displayName(Component.text("Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:sponge_saber"));
@@ -259,18 +266,27 @@ public class Items {
         return saber;
     }
 
-    public static ItemStack wetSpongeSaber() {
+    public static ItemStack wetSpongeSaber(int power) {
         ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = saber.getItemMeta();
-        meta.lore(List.of(Tooltip.RIGHT_CLICK.toComponent("to dash")));
+        meta = ItemHelper.weaponBuilder(meta, 8.5, 1.6);
+        List<Component> lore = meta.lore();
+        lore.add(0, Tooltip.RIGHT_CLICK.toComponent("to dash"));
+        lore.add(1, Component.text(power + " use" + (power == 1 ? "" : "s") + " left").color(TextColor.color(0x0099db)).decoration(TextDecoration.ITALIC, false));
+        meta.lore(lore);
         meta.displayName(Component.text("Wet Sponge Saber").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
         customModelData.setStrings(List.of("ultraroyales:wet_sponge_saber"));
         meta.setCustomModelDataComponent(customModelData);
+        meta.getPersistentDataContainer().set(SpongeSaberListener.SPONGE_POWER, PersistentDataType.INTEGER, power);
 
         saber.setItemMeta(meta);
 
         return saber;
+    }
+
+    public static ItemStack wetSpongeSaber() {
+        return wetSpongeSaber(3);
     }
 
     public static ItemStack bingoSpawnEgg() {
