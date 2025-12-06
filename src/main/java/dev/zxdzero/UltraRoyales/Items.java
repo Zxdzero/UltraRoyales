@@ -4,6 +4,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import dev.zxdzero.UltraRoyales.listeners.BingoTheClownListener;
+import dev.zxdzero.UltraRoyales.listeners.ChugJugListener;
 import dev.zxdzero.UltraRoyales.listeners.SpongeSaberListener;
 import dev.zxdzero.ZxdzeroEvents.ItemHelper;
 import dev.zxdzero.ZxdzeroEvents.ZxdzeroEvents;
@@ -28,12 +29,16 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.inventory.meta.components.EquippableComponent;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -71,9 +76,10 @@ public class Items {
             horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
             horse.getInventory().setArmor(horseArmor);
             horse.setColor(Horse.Color.GRAY);
-            horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.3375);
+            horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.4);
             horse.getAttribute(Attribute.MAX_HEALTH).setBaseValue(40);
-            horse.setJumpStrength(0.7);
+            horse.setHealth(40);
+            horse.setJumpStrength(1.0);
             horse.getPersistentDataContainer().set(knightsHorse, PersistentDataType.BOOLEAN, true);
             horse.addPassenger(player);
 
@@ -315,7 +321,7 @@ public class Items {
         return staff;
     }
 
-    static ItemStack electricConch() {
+    public static ItemStack electricConch() {
         ItemStack conch = new ItemStack(Material.TRIDENT);
         conch.addUnsafeEnchantment(Enchantment.RIPTIDE, 3);
         ItemMeta meta = conch.getItemMeta();
@@ -331,5 +337,36 @@ public class Items {
         conch.setItemMeta(meta);
 
         return conch;
+    }
+
+
+    // COMMON CRAFTS
+    public static ItemStack chugJug(int power) {
+        ItemStack jug = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) jug.getItemMeta();
+        meta.getPersistentDataContainer().set(ChugJugListener.JUG_POWER, PersistentDataType.INTEGER, power);
+
+        PotionEffect effect = new PotionEffect(
+                PotionEffectType.ABSORPTION,
+                600,
+                1,
+                true,
+                true
+        );
+        meta.addCustomEffect(effect, true);
+        meta.setColor(Color.fromRGB(255, 200, 50)); // CAN REMOVE IF CUSTOM MODEL BEING USED
+
+        meta.displayName(Component.text(power == 1 ? "Chug Jug" : "Weakened Chug Jug").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        List<Component> lore = new ArrayList<>();
+        lore.add(0, Component.text(""));
+        if (power == 1) {
+            lore.add(1, Component.text("Can be refilled once with player head").color(TextColor.color(0x0099db)).decoration(TextDecoration.ITALIC, false));
+        } else if (power == 0) {
+            lore.add(1, Component.text("Will break after use").color(TextColor.color(0x0099db)).decoration(TextDecoration.ITALIC, false));
+        }
+        meta.lore(lore);
+
+        jug.setItemMeta(meta);
+        return jug;
     }
 }

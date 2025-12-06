@@ -49,6 +49,7 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SkeletalBarberListener(), this);
         getServer().getPluginManager().registerEvents(new ElectricConchListener(), this);
         getServer().getPluginManager().registerEvents(new BingoTheClownListener(), this);
+        getServer().getPluginManager().registerEvents(new ChugJugListener(), this);
         getServer().getPluginManager().registerEvents(new ScenarioManager(), this);
         getServer().getPluginManager().registerEvents(new SpiderAIController(), this);
 

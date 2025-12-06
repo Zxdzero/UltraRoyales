@@ -23,7 +23,7 @@ public class ItemsMenuManager implements Listener {
         );
     }
     private static Inventory createMenu() {
-        Inventory inv = Bukkit.createInventory(null, 9, Component.text("Ultra Royales Items"));
+        Inventory inv = Bukkit.createInventory(null, 18, Component.text("Ultra Royales Items"));
         inv.setItem(0, Items.knightsSaddle());
         inv.setItem(1, Items.dwarvenBow());
         inv.setItem(2, Items.ghlochester());
@@ -35,6 +35,8 @@ public class ItemsMenuManager implements Listener {
         ItemStack heartItem = Items.heartItem();
         heartItem.setAmount(64);
         inv.setItem(8, heartItem);
+
+        inv.setItem(9, Items.chugJug(1));
         return inv;
     }
 }

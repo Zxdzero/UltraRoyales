@@ -22,7 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class SpongeSaberListener implements Listener {
-    public static final NamespacedKey SPONGE_POWER = new NamespacedKey("ultra_royals", "sponge_power");
+    public static final NamespacedKey SPONGE_POWER = new NamespacedKey(UltraRoyales.getPlugin(), "sponge_power");
     public static final int MAX_POWER = 1;
 
     public static void collect(Player player, ItemStack item) {

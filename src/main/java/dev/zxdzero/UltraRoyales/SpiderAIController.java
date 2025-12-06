@@ -22,7 +22,7 @@ public class SpiderAIController implements Listener {
     private static final Plugin plugin = UltraRoyales.getPlugin();
     private static final int MAX_SPIDERS_PER_PLAYER = 10;
 
-    private static final NamespacedKey SPIDER_TAG = new NamespacedKey(plugin, "minion_spider");
+    public static final NamespacedKey SPIDER_TAG = new NamespacedKey(plugin, "minion_spider");
 
     private static final Map<UUID, Set<UUID>> playerSpiders = new ConcurrentHashMap<>();
     private static final Map<UUID, UUID> spiderTargets = new ConcurrentHashMap<>();
