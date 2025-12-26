@@ -36,7 +36,7 @@ public class ItemsMenuManager implements Listener {
         heartItem.setAmount(64);
         inv.setItem(8, heartItem);
 
-        inv.setItem(9, Items.chugJug(1));
+        inv.setItem(9, Items.lifeElixir(1));
         return inv;
     }
 }

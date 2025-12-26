@@ -30,11 +30,11 @@ public class SpongeSaberListener implements Listener {
             int removed = clearWater(player);
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_SPLASH, 1, 1);
 
-            if (removed < 8) {
+            if (removed < 1) {
                 player.sendMessage(Component.text("You did not collect enough Water!").color(NamedTextColor.RED));
             } else if (player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) {
                 var enchantments = item.getEnchantments();
-                player.getInventory().setItemInMainHand(Items.wetSpongeSaber());
+                player.getInventory().setItemInMainHand(Items.wetSpongeSaber(item.getItemMeta()));
                 player.getInventory().getItemInMainHand().addEnchantments(enchantments);
 
             }
@@ -114,13 +114,12 @@ public class SpongeSaberListener implements Listener {
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SHULKER_SHOOT, 1, 1);
             player.playSound(player, Sound.ENTITY_SHULKER_SHOOT, 1, 1);
             if (!player.getInventory().getItemInMainHand().getItemMeta().hasCustomModelDataComponent()) return;
-            var enchantments = item.getEnchantments();
             int power = item.getPersistentDataContainer().get(SPONGE_POWER, PersistentDataType.INTEGER);
             if (power > 1) {
-                player.getInventory().setItemInMainHand(Items.wetSpongeSaber(power - 1));
+                player.getInventory().setItemInMainHand(Items.wetSpongeSaber(power - 1, item.getItemMeta()));
                 CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 0.75);
             } else {
-                player.getInventory().setItemInMainHand(Items.spongeSaber());
+                player.getInventory().setItemInMainHand(Items.spongeSaber(item.getItemMeta()));
                 CooldownRegistry.setCooldown(player, UltraRoyales.saberCooldown, 5);
             }
         }

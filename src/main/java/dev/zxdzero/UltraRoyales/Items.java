@@ -1,13 +1,9 @@
 package dev.zxdzero.UltraRoyales;
 
-import com.destroystokyo.paper.entity.ai.Goal;
-import com.destroystokyo.paper.entity.ai.GoalKey;
-import com.destroystokyo.paper.entity.ai.GoalType;
 import dev.zxdzero.UltraRoyales.listeners.BingoTheClownListener;
-import dev.zxdzero.UltraRoyales.listeners.ChugJugListener;
+import dev.zxdzero.UltraRoyales.listeners.LifeElixirListener;
 import dev.zxdzero.UltraRoyales.listeners.SpongeSaberListener;
 import dev.zxdzero.ZxdzeroEvents.ItemHelper;
-import dev.zxdzero.ZxdzeroEvents.ZxdzeroEvents;
 import dev.zxdzero.ZxdzeroEvents.registries.CooldownRegistry;
 import dev.zxdzero.ZxdzeroEvents.registries.ItemActionRegistry;
 import dev.zxdzero.ZxdzeroEvents.tooltip.Tooltip;
@@ -18,15 +14,13 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
-import org.bukkit.entity.Mob;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -39,7 +33,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 public class Items {
@@ -91,6 +84,30 @@ public class Items {
                     0.05
             );
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_HORSE_SADDLE, 1.0f, 1.0f);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        boolean rider = false;
+                        if (player.isInsideVehicle() && Boolean.TRUE.equals(player.getVehicle().getPersistentDataContainer().get(Items.knightsHorse, PersistentDataType.BOOLEAN))) {
+
+                            player.addPotionEffect(new PotionEffect(
+                                    PotionEffectType.STRENGTH,
+                                    40,
+                                    0,
+                                    true,
+                                    false,
+                                    false
+                            ));
+                            rider = true;
+                        }
+                        if (!rider) {
+                            cancel();
+                        }
+                    }
+                }
+            }.runTaskTimer(UltraRoyales.getPlugin(), 20, 20);
         });
 
         // Spider Staff
@@ -256,8 +273,14 @@ public class Items {
     }
 
     public static ItemStack spongeSaber() {
+        return spongeSaber(null);
+    }
+
+    public static ItemStack spongeSaber(ItemMeta meta) {
         ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = saber.getItemMeta();
+        if (meta == null) {
+            meta = saber.getItemMeta();
+        }
         meta = ItemHelper.weaponBuilder(meta, 8.5, 1.6);
         List<Component> lore = meta.lore();
         lore.addFirst(Tooltip.SHIFT_RIGHT_CLICK.toComponent("to collect water"));
@@ -272,9 +295,11 @@ public class Items {
         return saber;
     }
 
-    public static ItemStack wetSpongeSaber(int power) {
+    public static ItemStack wetSpongeSaber(int power, ItemMeta meta) {
         ItemStack saber = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = saber.getItemMeta();
+        if (meta == null) {
+            meta = saber.getItemMeta();
+        }
         meta = ItemHelper.weaponBuilder(meta, 8.5, 1.6);
         List<Component> lore = meta.lore();
         lore.add(0, Tooltip.RIGHT_CLICK.toComponent("to dash"));
@@ -292,7 +317,11 @@ public class Items {
     }
 
     public static ItemStack wetSpongeSaber() {
-        return wetSpongeSaber(3);
+        return wetSpongeSaber(3, null);
+    }
+
+    public static ItemStack wetSpongeSaber(ItemMeta meta) {
+        return wetSpongeSaber(3, meta);
     }
 
     public static ItemStack bingoSpawnEgg() {
@@ -341,10 +370,10 @@ public class Items {
 
 
     // COMMON CRAFTS
-    public static ItemStack chugJug(int power) {
-        ItemStack jug = new ItemStack(Material.POTION);
-        PotionMeta meta = (PotionMeta) jug.getItemMeta();
-        meta.getPersistentDataContainer().set(ChugJugListener.JUG_POWER, PersistentDataType.INTEGER, power);
+    public static ItemStack lifeElixir(int power) {
+        ItemStack elixir = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) elixir.getItemMeta();
+        meta.getPersistentDataContainer().set(LifeElixirListener.ELIXIR_POWER, PersistentDataType.INTEGER, power);
 
         PotionEffect effect = new PotionEffect(
                 PotionEffectType.ABSORPTION,
@@ -356,7 +385,7 @@ public class Items {
         meta.addCustomEffect(effect, true);
         meta.setColor(Color.fromRGB(255, 200, 50)); // CAN REMOVE IF CUSTOM MODEL BEING USED
 
-        meta.displayName(Component.text(power == 1 ? "Chug Jug" : "Weakened Chug Jug").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
+        meta.displayName(Component.text(power == 1 ? "Life Elixir" : "Weakened Life Elixir").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, true));
         List<Component> lore = new ArrayList<>();
         lore.add(0, Component.text(""));
         if (power == 1) {
@@ -366,7 +395,7 @@ public class Items {
         }
         meta.lore(lore);
 
-        jug.setItemMeta(meta);
-        return jug;
+        elixir.setItemMeta(meta);
+        return elixir;
     }
 }

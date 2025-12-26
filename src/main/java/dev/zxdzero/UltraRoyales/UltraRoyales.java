@@ -1,7 +1,6 @@
 package dev.zxdzero.UltraRoyales;
 
 import dev.zxdzero.UltraRoyales.commands.BingoResetCommand;
-import dev.zxdzero.UltraRoyales.commands.PodCommand;
 import dev.zxdzero.UltraRoyales.commands.WithdrawHeartCommand;
 import dev.zxdzero.UltraRoyales.listeners.*;
 import dev.zxdzero.UltraRoyales.listeners.scenarios.MaceRoyale;
@@ -49,7 +48,7 @@ public final class UltraRoyales extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SkeletalBarberListener(), this);
         getServer().getPluginManager().registerEvents(new ElectricConchListener(), this);
         getServer().getPluginManager().registerEvents(new BingoTheClownListener(), this);
-        getServer().getPluginManager().registerEvents(new ChugJugListener(), this);
+        getServer().getPluginManager().registerEvents(new LifeElixirListener(), this);
         getServer().getPluginManager().registerEvents(new ScenarioManager(), this);
         getServer().getPluginManager().registerEvents(new SpiderAIController(), this);
 

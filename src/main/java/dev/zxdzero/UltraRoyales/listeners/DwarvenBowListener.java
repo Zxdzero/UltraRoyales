@@ -8,6 +8,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -159,6 +160,15 @@ public class DwarvenBowListener implements Listener {
                     40,  // 2 seconds duration
                     0     // Haste I
             ));
+        }
+    }
+
+    @EventHandler
+    public void onEnchant(EnchantItemEvent e) {
+        if (e.getItem().getItemMeta().hasCustomModelDataComponent()) {
+            if (e.getItem().getItemMeta().getCustomModelDataComponent().getStrings().contains("ultraroyales:dwarvenbow")) {
+                e.setCancelled(true);
+            }
         }
     }
 }
