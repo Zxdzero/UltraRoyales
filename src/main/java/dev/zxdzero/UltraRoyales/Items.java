@@ -394,6 +394,9 @@ public class Items {
             lore.add(1, Component.text("Will break after use").color(TextColor.color(0x0099db)).decoration(TextDecoration.ITALIC, false));
         }
         meta.lore(lore);
+        CustomModelDataComponent customModelData = meta.getCustomModelDataComponent();
+        customModelData.setStrings(List.of("ultraroyales:lifeelixir"));
+        meta.setCustomModelDataComponent(customModelData);
 
         elixir.setItemMeta(meta);
         return elixir;

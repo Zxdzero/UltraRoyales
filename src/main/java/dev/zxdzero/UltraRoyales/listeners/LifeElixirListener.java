@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class LifeElixirListener implements Listener {
             lore.add(0, Component.text("30 seconds of Absorption 2").color(TextColor.color(0x0099db)).decoration(TextDecoration.ITALIC, false));
             lore.add(1, Component.text("Can be refilled once with player head").color(TextColor.color(0x0099db)).decoration(TextDecoration.ITALIC, false));
             emptyMeta.lore(lore);
+            CustomModelDataComponent customModelData = emptyMeta.getCustomModelDataComponent();
+            customModelData.setStrings(List.of("ultraroyales:lifeelixir"));
+            emptyMeta.setCustomModelDataComponent(customModelData);
 
             empty.setItemMeta(emptyMeta);
             e.setReplacement(empty);
